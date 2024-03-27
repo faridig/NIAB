@@ -7,6 +7,17 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+from shutil import which
+
+SELENIUM_DRIVER_NAME = 'chrome'
+SELENIUM_DRIVER_EXECUTABLE_PATH = which('scraping\chromedriver')
+SELENIUM_DRIVER_ARGUMENTS = ['--headers']
+
+DOWNLOADER_MIDDLEWARES = {
+   'scrapy_selenium.SeleniumMiddleware': 800
+}
+
+
 BOT_NAME = "scraping"
 
 SPIDER_MODULES = ["scraping.spiders"]
@@ -14,7 +25,7 @@ NEWSPIDER_MODULE = "scraping.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "scraping (+http://www.yourdomain.com)"
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
