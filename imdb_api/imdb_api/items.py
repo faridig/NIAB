@@ -20,3 +20,4 @@ class FilmItem(scrapy.Item):
     vote_count = scrapy.Field()
     metacritic_score = scrapy.Field()
     poster_link = scrapy.Field()
+    audience = scrapy.Field()
