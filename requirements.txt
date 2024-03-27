@@ -1,0 +1,4 @@
+# Requirements for SCRAPY PART
+scrapy<3
+ipython<9 # for scrapy shell
+loguru<1 # to colorize logs when scrapy crawl for better visibility
