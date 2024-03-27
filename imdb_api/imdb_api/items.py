@@ -6,7 +6,17 @@
 import scrapy
 
 
-class ImdbApiItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class FilmItem(scrapy.Item):
+    id = scrapy.Field()
+    kind = scrapy.Field()
+    title = scrapy.Field()
+    original_title = scrapy.Field()
+    genres = scrapy.Field()
+    duration_s = scrapy.Field()
+    release_year = scrapy.Field()
+    end_year = scrapy.Field()
+    synopsis = scrapy.Field()
+    rating = scrapy.Field()
+    vote_count = scrapy.Field()
+    metacritic_score = scrapy.Field()
+    poster_link = scrapy.Field()
