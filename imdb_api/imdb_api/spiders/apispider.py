@@ -89,8 +89,11 @@ class ApiSpider(scrapy.Spider):
                 original_title = None
                 
             # Special case of 'genres'
-            genres = film.get('titleGenres', {}).get('genres', [])
-            genres = '|'.join([genre.get('genre', {}).get('text', '') for genre in genres])
+            if (title_genres := film.get('titleGenres', {})) is not None:
+                genres = title_genres.get('genres', [])
+                genres = '|'.join([genre.get('genre', {}).get('text', '') for genre in genres])
+            else:
+                genres = None
 
             # duration_s
             if (runtime := film.get('runtime', {})) is not None:
@@ -186,7 +189,7 @@ class ApiSpider(scrapy.Spider):
             "sortBy": "POPULARITY",
             "sortOrder": "ASC",
             "titleTypeConstraint": {
-                "anyTitleTypeIds": self.kind
+                "anyTitleTypeIds": ["movie"]
             },
             # Adding end_cursor to delimit request
             "after": end_cursor,
