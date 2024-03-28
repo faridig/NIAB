@@ -78,7 +78,7 @@ class StoreSQLitePipeline:
         adapter = ItemAdapter(item)
         self.cur.execute(
             """
-            INSERT INTO media (
+            INSERT INTO film_api (
             id, title, original_title, genres, duration_s,
             release_year, rating, vote_count, metacritic_score,
             audience, synopsis, poster_link
