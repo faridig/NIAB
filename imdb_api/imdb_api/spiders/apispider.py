@@ -30,6 +30,9 @@ class ApiSpider(scrapy.Spider):
         # There's no `after` parameter for this initial call
         variables = {
             "first": 1_000,  # Number of films you want to get info with one call
+            "languageConstraint": {
+                "allLanguages": ["fr"]
+            },
             "locale": "en-US",
             "releaseDateConstraint": {
                 "releaseDateRange": {
@@ -170,6 +173,9 @@ class ApiSpider(scrapy.Spider):
         variables = {
             # Keeping the same parameters as in start_requests
             "first": 1_000,  # Number of items you want
+            "languageConstraint": {
+                "allLanguages": ["fr"]
+            },
             "locale": "en-US",
             "releaseDateConstraint": {
                 "releaseDateRange": {
