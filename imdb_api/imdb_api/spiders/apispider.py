@@ -87,7 +87,7 @@ class ApiSpider(scrapy.Spider):
                 
             # Special case of 'genres'
             genres = film.get('titleGenres', {}).get('genres', [])
-            genres = ', '.join([genre.get('genre', {}).get('text', '') for genre in genres])
+            genres = ','.join([genre.get('genre', {}).get('text', '') for genre in genres])
 
             # duration_s
             if (runtime := film.get('runtime', {})) is not None:
