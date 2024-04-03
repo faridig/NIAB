@@ -3,7 +3,7 @@ import logging
 import niab_mysql
 
 
-logfile = './logs/pivot_films.log'
+logfile = './logs/pivot_oscars.log'
 
 # Configuration du logger
 # réinitialisation de la log
@@ -16,7 +16,7 @@ logging.info('§§§ LANCEMENT DU SCRIPT §§§')
 conn = niab_mysql.analytic_conn()
 cur = conn.cursor()
 
-df = pd.read_csv("./chris/films.csv")
+df = pd.read_csv("./chris/oscars.csv")
 logging.info('Liste des colonnes :')
 logging.info(df.columns)
 
@@ -32,25 +32,13 @@ line = 0
 for index, row in df.iterrows():
     line += 1
 
-    casting = row['casting']
-    director = row['director']
-    duration = row['duration']
-    entries = row['entries']
-    film_id = row['film_id']
-    genres = row['genres']
-    img_src = row['img_src']
-    press_ratings = row['press_ratings']
-    release = row['release']
-    societies = row['societies']
-    synopsis = row['synopsis'].replace('"', '""')
-    title = row['title'].replace('"', '""')
-    viewers_ratings = row['viewers_ratings']
+    category = row['category']
+    winner = row['winner']
+    year = row['year']
 
     request = f"""
-INSERT INTO pivot_film_api
-     VALUES ("{casting}", "{director}", {duration}, {entries}, {film_id},
-             "{genres}", "{img_src}", {press_ratings}, "{release}", "{societies}",
-             "{synopsis}", "{title}", {viewers_ratings});
+INSERT INTO pivot_oscars
+     VALUES ("{category}", "{winner}", {year});
 """
     
     niab_mysql.request(cur, request, logging, line)
