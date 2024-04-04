@@ -1,0 +1,2 @@
+django<5
+django-dotenv<2
