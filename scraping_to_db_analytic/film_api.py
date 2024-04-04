@@ -32,8 +32,8 @@ line = 0
 for index, row in df.iterrows():
     line += 1
 
-    casting = row['casting']
-    director = row['director']
+    casting = row['casting'].replace('"', '""')
+    director = row['director'].replace('"', '""')
     duration = row['duration']
     entries = row['entries']
     film_id = row['film_id']
