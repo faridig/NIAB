@@ -3,7 +3,7 @@ import logging
 import niab_mysql
 
 
-logfile = './logs/pivot_oscars.log'
+logfile = './logs/pivot_imdb_most_popular_celebs.log'
 
 # Configuration du logger
 # réinitialisation de la log
@@ -16,32 +16,33 @@ logging.info('§§§ LANCEMENT DU SCRIPT §§§')
 conn = niab_mysql.analytic_conn()
 cur = conn.cursor()
 
-df = pd.read_csv("./chris/oscars.csv")
+df = pd.read_csv("./chris/imdb_most_popular_celebs.csv")
 logging.info('Liste des colonnes :')
 logging.info(df.columns)
 
 df.fillna(0, inplace=True)
 
-request=("TRUNCATE pivot_oscars")
+request=("TRUNCATE pivot_imdb_most_popular_celebs")
 niab_mysql.request(cur, request, logging)
 
 ####################################################################################################
 # INSERT EN BOUCLE
 
-line = 0
+
 for index, row in df.iterrows():
-    line += 1
+    line = 0
 
-    category = row['category']
-    winner = row['winner']
-    year = row['year']
+    celebrity = row['celebrity']
 
-    request = f"""
-INSERT INTO pivot_oscars
-     VALUES ("{category}", "{winner}", {year});
+    names = celebrity.split(',')
+
+    for index, name in enumerate(names):
+        line += 1
+        request = f"""
+INSERT INTO pivot_imdb_most_popular_celebs
+     VALUES ({index + 1}, "{name}");
 """
-    
-    niab_mysql.request(cur, request, logging, line)
+        niab_mysql.request(cur, request, logging, line)
 
 ####################################################################################################
 
