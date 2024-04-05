@@ -1,5 +1,10 @@
-# Created by https://www.toptal.com/developers/gitignore/api/linux,python,django
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,python,django
+DigiCertGlobalRootCA.crt.pem
+niab_django/DigiCertGlobalRootCA.crt.pem
+chris/
+chris.ipynb
+
+# Created by https://www.toptal.com/developers/gitignore/api/python,linux,django
+# Edit at https://www.toptal.com/developers/gitignore?templates=python,linux,django
 
 ### Django ###
 *.log
@@ -278,4 +283,4 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-# End of https://www.toptal.com/developers/gitignore/api/linux,python,django
+# End of https://www.toptal.com/developers/gitignore/api/python,linux,django
