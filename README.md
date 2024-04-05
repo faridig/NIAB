@@ -1,3 +1,3 @@
 NIAB
 
-![Shéma de la BDD analytique](./nom_de_votre_image.jpg)
+![Shéma de la BDD analytique](./BDDa_shema.png)
