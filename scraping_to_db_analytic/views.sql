@@ -37,9 +37,6 @@ SELECT m.title,
            JOIN persons p ON p.id_person = ma.id_person
           WHERE ma.id_allocine = m.id_allocine
        ORDER BY p.oscars DESC, p.name
-          LIMIT 1 OFFSET 2) AS start3,
-        m.youtube_views,
-        m.youtube_likes,
-        m.youtube_comments
+          LIMIT 1 OFFSET 2) AS start3
    FROM movies m
    ;
