@@ -1,0 +1,3 @@
+
+faire un pipeline pr nettoyer data de YT 
+conrad pr extraire via api + pipeline pr nettoyer + envoi vers bdd 
