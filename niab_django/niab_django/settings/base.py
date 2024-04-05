@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app_main',
+    'app_maquette',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +57,7 @@ ROOT_URLCONF = 'niab_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,10 +76,25 @@ WSGI_APPLICATION = 'niab_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DB_FUNCTIONAL_HOST = os.getenv('DB_FUNCTIONAL_HOST')
+DB_FUNCTIONAL_USER = os.getenv('DB_FUNCTIONAL_USER')
+DB_FUNCTIONAL_PASSWORD = os.getenv('DB_FUNCTIONAL_PASSWORD')
+DB_FUNCTIONAL_DATABASE = os.getenv('DB_FUNCTIONAL_DATABASE')
+DB_FUNCTIONAL_SSL = os.getenv('DB_FUNCTIONAL_SSL')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': DB_FUNCTIONAL_DATABASE,
+        'USER': DB_FUNCTIONAL_USER,
+        'PASSWORD': DB_FUNCTIONAL_PASSWORD,
+        'HOST': DB_FUNCTIONAL_HOST,
+        'PORT': '3306', # port par défaut de MySQL
+        'OPTIONS': {
+            'ssl': {
+                'ca': DB_FUNCTIONAL_SSL,  # Chemin vers le fichier du certificat CA
+            }
+        }
     }
 }
 
