@@ -16,7 +16,8 @@ logging.info('§§§ LANCEMENT DU SCRIPT §§§')
 conn = niab_mysql.analytic_conn()
 cur = conn.cursor()
 
-df = pd.read_csv("./chris/films.csv")
+# df = pd.read_csv("./chris/films.csv")
+df = pd.read_csv("./chris/train_films.csv")
 logging.info('Liste des colonnes :')
 logging.info(df.columns)
 
@@ -39,18 +40,18 @@ for index, row in df.iterrows():
     film_id = row['film_id']
     genres = row['genres']
     img_src = row['img_src']
-    press_ratings = row['press_ratings']
     release = row['release']
     societies = row['societies']
     synopsis = row['synopsis'].replace('"', '""')
     title = row['title'].replace('"', '""')
-    viewers_ratings = row['viewers_ratings']
+    budget = row['budget']
+    nationality = row['nationality']
 
     request = f"""
 INSERT INTO pivot_film_api
      VALUES ("{casting}", "{director}", {duration}, {entries}, {film_id},
-             "{genres}", "{img_src}", {press_ratings}, "{release}", "{societies}",
-             "{synopsis}", "{title}", {viewers_ratings});
+             "{genres}", "{img_src}", "{release}", "{societies}", "{synopsis}",
+             "{title}", "{budget}", "{nationality}");
 """
     
     niab_mysql.request(cur, request, logging, line)
