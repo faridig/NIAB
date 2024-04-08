@@ -32,29 +32,31 @@ GROUP BY m.id_allocine
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `db_to_ml` AS
-SELECT m.title,
+SELECT m.id_allocine,
+       m.title,
        m.release_year,
        m.original_title,
-       (SELECT GROUP_CONCAT(g.genre SEPARATOR ', ')
+       (SELECT GROUP_CONCAT(g.genre SEPARATOR ',')
           FROM movie_genre mg
           JOIN genres g ON g.id_genre = mg.id_genre
          WHERE mg.id_allocine = m.id_allocine
       ORDER BY g.genre) AS genres,
        m.duration_m,
-       m.public_rating,
-       m.vote_count,
-       m.press_rating,
-       m.audience,
        m.synopsis,
        m.poster_link,
-       (SELECT GROUP_CONCAT(p.name SEPARATOR ', ')
+       m.release_date,
+       m.societies,
+       m.budget,
+       m.nationality,
+       (SELECT GROUP_CONCAT(p.name SEPARATOR ',')
           FROM movie_director md
           JOIN persons p ON p.id_person = md.id_person
          WHERE md.id_allocine = m.id_allocine
       ORDER BY p.name) AS directors,
        mdo.all_director_oscars,
        mao.all_actor_oscars,
-       mrc.actor_celebs
+       mrc.actor_celebs,
+       m.entries
   FROM movies m
   LEFT OUTER JOIN movies_director_oscars mdo ON mdo.id_allocine = m.id_allocine
   LEFT OUTER JOIN movies_actor_oscars mao ON mao.id_allocine = m.id_allocine
