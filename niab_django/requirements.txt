@@ -1,2 +1,5 @@
 django<5
 django-dotenv<2
+mysql<2
+mysqlclient<3
+sqlparse<2
