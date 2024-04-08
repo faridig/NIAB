@@ -1,29 +1,32 @@
 import scrapy
-from scrapy.loader import ItemLoader
-
 
 class SortiesSpider(scrapy.Spider):
     name = "sorties"
-    allowed_domains = ["www.senscritique.com"]
-    start_urls = ["https://www.senscritique.com/films/sorties-cinema/2024"]
+    allowed_domains = ['senscritique.com']
+    
+    def start_requests(self):
+        base_url = "https://www.senscritique.com/liste/1100_films_et_leur_budget/1584769?page={}&sortBy=DATE_RELEASE"
+        for page_num in range(1, 41):  # Boucle sur les numéros de page de 1 à 40
+            url = base_url.format(page_num)
 
-    def parse(self, response):
-        films = response.xpath('//div[@class="sc-bd73f3c1-5 ezoJpD"]')
-
-
-
-        for film in films:
-            url = films.xpath('//h2/a/@href')
-            
 
             yield scrapy.Request(
-                url = self.start_urls[0] + url,
-                callback =self.parse_details
+                url=url,
+                callback=self.parse,
+                meta={"playwright": True}
             )
 
-    def parse_details(self, response):
-        main = response.xpath('(//div[@class="sc-72366723-0 lfYUbX"])[1]')
+    def parse(self, response):
+        films = response.xpath('//h3/a[@class="sc-e6f263fc-0 sc-4501ca2-1 cTitej hiOzhw sc-bd73f3c1-3 bwqoVT"]/text()').getall()
+        budgets = response.xpath('//div[@class="sc-56c2a583-0 kVKNKg"]/p/span[@data-testid="linkify-text"]/text()').getall()
+
+        for film, budget in zip(films, budgets):
+            yield {
+                "film": film.strip(),
+                "budget": budget.strip()
+            }
 
 
 
-        pass
+
+
