@@ -2,7 +2,10 @@ import dotenv
 import os
 
 
-dotenv.load_dotenv(override=True)
+try:
+    dotenv.load_dotenv(override=True)
+except:
+    dotenv.read_dotenv(override=True)
 
 DEBUG = os.environ.get('DEBUG') == '1'
 

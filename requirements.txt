@@ -3,3 +3,8 @@ pandas
 matplotlib
 seaborn
 scikit-learn
+mysql<2
+mysqlclient<3
+mysql-connector-python<9
+python-dotenv<2
+
