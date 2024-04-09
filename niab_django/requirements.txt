@@ -3,3 +3,4 @@ django-dotenv<2
 mysql<2
 mysqlclient<3
 sqlparse<2
+whitenoise<7

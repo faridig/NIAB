@@ -1,0 +1,7 @@
+@media (min-width: 1024px) {
+    .lg-fixed {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+    }
+}

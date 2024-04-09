@@ -10,11 +10,14 @@
     <meta content="description" name="description">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <script src="{% static 'js/script.js' %}"></script>
 </head>
-<body>
+<body class="bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-400">
     {% include "includes/header.html" %}
 
+    <main class="container mx-auto py-8">
     {% block content %}{% endblock content %}
+    </main>
 
     {% include "includes/footer.html" %}
 
