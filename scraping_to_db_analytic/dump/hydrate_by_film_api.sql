@@ -14,17 +14,17 @@ BEGIN
 	DECLARE i_film_id         INT;
     DECLARE t_genres          TEXT;
     DECLARE v_img_src         VARCHAR(255);
-    DECLARE i_press_ratings   INT;
-    DECLARE i_release_date    VARCHAR(30);
+    DECLARE d_release_date    DATE;
     DECLARE t_societies       TEXT;
     DECLARE t_synopsis        TEXT;
     DECLARE v_title           VARCHAR(255);
-    DECLARE i_viewers_ratings INT;
+    DECLARE v_budget          VARCHAR(255);
+    DECLARE t_nationality     TEXT;
    
     DECLARE pivot_film_api CURSOR FOR 
         SELECT casting, director, duration, entries, film_id,
-			   genres, img_src, press_ratings, release_date, societies,
-			   synopsis, title, viewers_ratings
+			   genres, img_src, release_date, societies, synopsis,
+			   title, budget, nationality
           FROM pivot_film_api;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
@@ -62,8 +62,8 @@ BEGIN
 	    
    		SET v_info = "read_loop";
 	    FETCH pivot_film_api INTO t_casting, t_director, i_duration, i_entries, i_film_id,
-	                              t_genres, v_img_src, i_press_ratings, i_release_date, t_societies,
-	                              t_synopsis, v_title, i_viewers_ratings;
+	                              t_genres, v_img_src, d_release_date, t_societies, t_synopsis,
+	                              v_title, v_budget, t_nationality;
 	    IF done = 1 THEN
 	   		LEAVE read_loop;
    		END IF;
@@ -74,10 +74,12 @@ BEGIN
 	    IF NOT EXISTS (SELECT 1 FROM movies WHERE id_allocine = i_film_id) THEN
 		    INSERT INTO movies (id_allocine, title, release_year, original_title, duration_m,
 	                            public_rating, vote_count, press_rating, audience, synopsis,
-	                            poster_link)
-	             VALUES (i_film_id, v_title, SUBSTRING(i_release_date, CHAR_LENGTH(i_release_date) - 3), NULL, i_duration,
-	                     i_viewers_ratings, NULL, i_press_ratings, NULL, t_synopsis,
-	                     v_img_src);
+	                            poster_link, release_date, societies, budget, nationality,
+	                            entries)
+	             VALUES (i_film_id, v_title, YEAR(d_release_date), NULL, i_duration,
+	                     NULL, NULL, NULL, NULL, t_synopsis,
+	                     v_img_src, d_release_date, t_societies, v_budget, t_nationality,
+	                     i_entries);
 	        INSERT INTO log_pivot
                  VALUES (SYSDATE(), "hydrate_by_film_api", v_table_from, v_table_to, 0, v_info);
 	    ELSE
