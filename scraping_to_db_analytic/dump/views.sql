@@ -43,10 +43,10 @@ GROUP BY m.id_allocine;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `jpbox` AS
-  SELECT m.id_allocine, pj.ip_copies copies
+  SELECT m.id_allocine, pj.jp_copies copies
     FROM movies m
     JOIN pivot_jpbox pj ON LOWER(pj.jp_title) = LOWER(m.title)
-                       AND pj.jp_release  = m.release_date
+                       AND pj.jp_release  = m.release_date;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `movies_people` AS
