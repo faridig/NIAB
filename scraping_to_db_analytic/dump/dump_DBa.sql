@@ -41,6 +41,12 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `all_actor_oscars`,
  1 AS `actor_celebs`,
  1 AS `actor_celebs_by_year`,
+ 1 AS `vacances_automne`,
+ 1 AS `vacances_noel`,
+ 1 AS `vacances_hiver`,
+ 1 AS `vacances_printemps`,
+ 1 AS `vacances_ete`,
+ 1 AS `nb_zone_en_vacances`,
  1 AS `entries_mean_actor`,
  1 AS `entries_sum_actor`,
  1 AS `entries_mean_director`,
@@ -48,7 +54,9 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `entries_mean_composer`,
  1 AS `entries_sum_composer`,
  1 AS `jpbox_copies`,
- 1 AS `entries`*/;
+ 1 AS `imdb_entries`,
+ 1 AS `imdb_us_entries`,
+ 1 AS `imdb_id`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -173,6 +181,9 @@ CREATE TABLE `movies` (
   `budget` varchar(255) DEFAULT NULL,
   `nationality` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `entries` bigint DEFAULT NULL,
+  `imdb_id` varchar(15) DEFAULT NULL,
+  `imdb_entries` bigint DEFAULT NULL,
+  `imdb_us_entries` bigint DEFAULT NULL,
   PRIMARY KEY (`id_allocine`),
   UNIQUE KEY `movies_unique` (`title`,`release_year`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -202,6 +213,24 @@ SET @saved_cs_client     = @@character_set_client;
 /*!50001 CREATE VIEW `movies_director_oscars` AS SELECT 
  1 AS `id_allocine`,
  1 AS `all_director_oscars`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `movies_en_vacances`
+--
+
+DROP TABLE IF EXISTS `movies_en_vacances`;
+/*!50001 DROP VIEW IF EXISTS `movies_en_vacances`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `movies_en_vacances` AS SELECT 
+ 1 AS `id_allocine`,
+ 1 AS `vacances_automne`,
+ 1 AS `vacances_noel`,
+ 1 AS `vacances_hiver`,
+ 1 AS `vacances_printemps`,
+ 1 AS `vacances_ete`,
+ 1 AS `nb_zone_en_vacances`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -262,7 +291,7 @@ CREATE TABLE `persons` (
   PRIMARY KEY (`id_person`),
   UNIQUE KEY `persons_unique` (`name`),
   KEY `persons_oscars_IDX` (`oscars`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=54525 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=134150 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -402,6 +431,23 @@ CREATE TABLE `pivot_people` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `pivot_vacances_francaise`
+--
+
+DROP TABLE IF EXISTS `pivot_vacances_francaise`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pivot_vacances_francaise` (
+  `zone` varchar(6) NOT NULL,
+  `vacances` varchar(100) NOT NULL,
+  `start_date` date NOT NULL,
+  `stop_date` date NOT NULL,
+  KEY `pivot_vacances_francaise_start_date_IDX` (`start_date`) USING BTREE,
+  KEY `pivot_vacances_francaise_stop_date_IDX` (`stop_date`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Final view structure for view `db_to_ml`
 --
 
@@ -414,7 +460,7 @@ CREATE TABLE `pivot_people` (
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `db_to_ml` AS select `m`.`id_allocine` AS `id_allocine`,`m`.`title` AS `title`,`m`.`release_year` AS `release_year`,`m`.`original_title` AS `original_title`,(select group_concat(`g`.`genre` separator ',') from (`movie_genre` `mg` join `genres` `g` on((`g`.`id_genre` = `mg`.`id_genre`))) where (`mg`.`id_allocine` = `m`.`id_allocine`)) AS `genres`,`m`.`duration_m` AS `duration_m`,`m`.`synopsis` AS `synopsis`,`m`.`poster_link` AS `poster_link`,`m`.`release_date` AS `release_date`,`m`.`societies` AS `societies`,`m`.`budget` AS `budget`,`m`.`nationality` AS `nationality`,(select group_concat(`p`.`name` separator ',') from (`movie_director` `md` join `persons` `p` on((`p`.`id_person` = `md`.`id_person`))) where (`md`.`id_allocine` = `m`.`id_allocine`)) AS `directors`,`mdo`.`all_director_oscars` AS `all_director_oscars`,`mao`.`all_actor_oscars` AS `all_actor_oscars`,`mrc`.`actor_celebs` AS `actor_celebs`,`mrcby`.`actor_celebs` AS `actor_celebs_by_year`,`mp`.`entries_mean_actor` AS `entries_mean_actor`,`mp`.`entries_sum_actor` AS `entries_sum_actor`,`mp`.`entries_mean_director` AS `entries_mean_director`,`mp`.`entries_sum_director` AS `entries_sum_director`,`mp`.`entries_mean_composer` AS `entries_mean_composer`,`mp`.`entries_sum_composer` AS `entries_sum_composer`,`j`.`copies` AS `jpbox_copies`,`m`.`entries` AS `entries` from ((((((`movies` `m` left join `movies_director_oscars` `mdo` on((`mdo`.`id_allocine` = `m`.`id_allocine`))) left join `movies_actor_oscars` `mao` on((`mao`.`id_allocine` = `m`.`id_allocine`))) left join `movies_rank_celebrity` `mrc` on((`mrc`.`id_allocine` = `m`.`id_allocine`))) left join `movies_rank_celebrity_by_year` `mrcby` on((`mrcby`.`id_allocine` = `m`.`id_allocine`))) left join `movies_people` `mp` on((`mp`.`id_allocine` = `m`.`id_allocine`))) left join `jpbox` `j` on((`j`.`id_allocine` = `m`.`id_allocine`))) */;
+/*!50001 VIEW `db_to_ml` AS select `m`.`id_allocine` AS `id_allocine`,`m`.`title` AS `title`,`m`.`release_year` AS `release_year`,`m`.`original_title` AS `original_title`,(select group_concat(`g`.`genre` separator ',') from (`movie_genre` `mg` join `genres` `g` on((`g`.`id_genre` = `mg`.`id_genre`))) where (`mg`.`id_allocine` = `m`.`id_allocine`)) AS `genres`,`m`.`duration_m` AS `duration_m`,`m`.`synopsis` AS `synopsis`,`m`.`poster_link` AS `poster_link`,`m`.`release_date` AS `release_date`,`m`.`societies` AS `societies`,`m`.`budget` AS `budget`,`m`.`nationality` AS `nationality`,(select group_concat(`p`.`name` separator ',') from (`movie_director` `md` join `persons` `p` on((`p`.`id_person` = `md`.`id_person`))) where (`md`.`id_allocine` = `m`.`id_allocine`)) AS `directors`,`mdo`.`all_director_oscars` AS `all_director_oscars`,`mao`.`all_actor_oscars` AS `all_actor_oscars`,`mrc`.`actor_celebs` AS `actor_celebs`,`mrcby`.`actor_celebs` AS `actor_celebs_by_year`,`mev`.`vacances_automne` AS `vacances_automne`,`mev`.`vacances_noel` AS `vacances_noel`,`mev`.`vacances_hiver` AS `vacances_hiver`,`mev`.`vacances_printemps` AS `vacances_printemps`,`mev`.`vacances_ete` AS `vacances_ete`,`mev`.`nb_zone_en_vacances` AS `nb_zone_en_vacances`,`mp`.`entries_mean_actor` AS `entries_mean_actor`,`mp`.`entries_sum_actor` AS `entries_sum_actor`,`mp`.`entries_mean_director` AS `entries_mean_director`,`mp`.`entries_sum_director` AS `entries_sum_director`,`mp`.`entries_mean_composer` AS `entries_mean_composer`,`mp`.`entries_sum_composer` AS `entries_sum_composer`,`j`.`copies` AS `jpbox_copies`,`m`.`imdb_entries` AS `imdb_entries`,`m`.`imdb_us_entries` AS `imdb_us_entries`,`m`.`imdb_id` AS `imdb_id` from (((((((`movies` `m` left join `movies_director_oscars` `mdo` on((`mdo`.`id_allocine` = `m`.`id_allocine`))) left join `movies_actor_oscars` `mao` on((`mao`.`id_allocine` = `m`.`id_allocine`))) left join `movies_rank_celebrity` `mrc` on((`mrc`.`id_allocine` = `m`.`id_allocine`))) left join `movies_rank_celebrity_by_year` `mrcby` on((`mrcby`.`id_allocine` = `m`.`id_allocine`))) left join `movies_people` `mp` on((`mp`.`id_allocine` = `m`.`id_allocine`))) left join `jpbox` `j` on((`j`.`id_allocine` = `m`.`id_allocine`))) left join `movies_en_vacances` `mev` on((`mev`.`id_allocine` = `m`.`id_allocine`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -450,7 +496,7 @@ CREATE TABLE `pivot_people` (
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `movies_actor_oscars` AS select `m`.`id_allocine` AS `id_allocine`,count(1) AS `all_actor_oscars` from (((`movies` `m` join `movie_actor` `ma` on((`ma`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `ma`.`id_person`))) join `pivot_oscars` `po` on((lower(`po`.`winner`) = lower(`p`.`name`)))) where (`po`.`year` < `m`.`release_year`) group by `m`.`id_allocine` */;
+/*!50001 VIEW `movies_actor_oscars` AS select `m`.`id_allocine` AS `id_allocine`,count(1) AS `all_actor_oscars` from (((`movies` `m` join `movie_actor` `ma` on((`ma`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `ma`.`id_person`))) join `pivot_oscars` `po` on((`po`.`winner` = `p`.`name`))) where (`po`.`year` < `m`.`release_year`) group by `m`.`id_allocine` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -468,7 +514,25 @@ CREATE TABLE `pivot_people` (
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `movies_director_oscars` AS select `m`.`id_allocine` AS `id_allocine`,count(1) AS `all_director_oscars` from (((`movies` `m` join `movie_director` `md` on((`md`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `md`.`id_person`))) join `pivot_oscars` `po` on((lower(`po`.`winner`) = lower(`m`.`title`)))) where (`po`.`category` in ('Best Motion Picture of the Year','Best Picture','Best Achievement in Directing','Best Director')) group by `m`.`id_allocine` */;
+/*!50001 VIEW `movies_director_oscars` AS select `m`.`id_allocine` AS `id_allocine`,count(1) AS `all_director_oscars` from (((`movies` `m` join `movie_director` `md` on((`md`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `md`.`id_person`))) join `pivot_oscars` `po` on((`po`.`winner` = `m`.`title`))) where (`po`.`category` in ('Best Motion Picture of the Year','Best Picture','Best Achievement in Directing','Best Director')) group by `m`.`id_allocine` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `movies_en_vacances`
+--
+
+/*!50001 DROP VIEW IF EXISTS `movies_en_vacances`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `movies_en_vacances` AS select `m`.`id_allocine` AS `id_allocine`,sum((case when (`pvf`.`vacances` = 'vacances d\'Automne') then 1 else 0 end)) AS `vacances_automne`,sum((case when (`pvf`.`vacances` = 'vacances de Noël') then 1 else 0 end)) AS `vacances_noel`,sum((case when (`pvf`.`vacances` = 'vacances d\'Hiver') then 1 else 0 end)) AS `vacances_hiver`,sum((case when (`pvf`.`vacances` = 'vacances de Printemps') then 1 else 0 end)) AS `vacances_printemps`,sum((case when (`pvf`.`vacances` = 'vacances d\'Été') then 1 else 0 end)) AS `vacances_ete`,count(`pvf`.`zone`) AS `nb_zone_en_vacances` from (`movies` `m` left join `pivot_vacances_francaise` `pvf` on(((`m`.`release_date` >= `pvf`.`start_date`) and (`m`.`release_date` <= `pvf`.`stop_date`)))) group by `m`.`id_allocine` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -486,7 +550,7 @@ CREATE TABLE `pivot_people` (
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `movies_people` AS select `m`.`id_allocine` AS `id_allocine`,round(avg((case when (`pp`.`role` in ('Acteur','Actrice')) then `pp`.`entries_mean` else 0 end)),0) AS `entries_mean_actor`,sum((case when (`pp`.`role` in ('Acteur','Actrice')) then `pp`.`entries_sum` else 0 end)) AS `entries_sum_actor`,round(avg((case when (`pp`.`role` in ('Réalisateur','Réalisatrice','Réalisaeur','Réalisateurs')) then `pp`.`entries_mean` else 0 end)),0) AS `entries_mean_director`,sum((case when (`pp`.`role` in ('Réalisateur','Réalisatrice','Réalisaeur','Réalisateurs')) then `pp`.`entries_sum` else 0 end)) AS `entries_sum_director`,round(avg((case when (`pp`.`role` = 'Compositeur') then `pp`.`entries_mean` else 0 end)),0) AS `entries_mean_composer`,sum((case when (`pp`.`role` = 'Compositeur') then `pp`.`entries_sum` else 0 end)) AS `entries_sum_composer` from (((`movies` `m` join `movie_actor` `ma` on((`ma`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `ma`.`id_person`))) join `pivot_people` `pp` on((lower(`pp`.`name`) = lower(`p`.`name`)))) group by `m`.`id_allocine` */;
+/*!50001 VIEW `movies_people` AS select `m`.`id_allocine` AS `id_allocine`,round(avg((case when (`pp`.`role` in ('Acteur','Actrice')) then `pp`.`entries_mean` else 0 end)),0) AS `entries_mean_actor`,sum((case when (`pp`.`role` in ('Acteur','Actrice')) then `pp`.`entries_sum` else 0 end)) AS `entries_sum_actor`,round(avg((case when (`pp`.`role` in ('Réalisateur','Réalisatrice','Réalisaeur','Réalisateurs')) then `pp`.`entries_mean` else 0 end)),0) AS `entries_mean_director`,sum((case when (`pp`.`role` in ('Réalisateur','Réalisatrice','Réalisaeur','Réalisateurs')) then `pp`.`entries_sum` else 0 end)) AS `entries_sum_director`,round(avg((case when (`pp`.`role` = 'Compositeur') then `pp`.`entries_mean` else 0 end)),0) AS `entries_mean_composer`,sum((case when (`pp`.`role` = 'Compositeur') then `pp`.`entries_sum` else 0 end)) AS `entries_sum_composer` from (((`movies` `m` join `movie_actor` `ma` on((`ma`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `ma`.`id_person`))) join `pivot_people` `pp` on((`pp`.`name` = `p`.`name`))) group by `m`.`id_allocine` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -504,7 +568,7 @@ CREATE TABLE `pivot_people` (
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `movies_rank_celebrity` AS select `m`.`id_allocine` AS `id_allocine`,sum((101 - `pimpc`.`rank_celebrity`)) AS `actor_celebs` from (((`movies` `m` join `movie_actor` `ma` on((`ma`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `ma`.`id_person`))) join `pivot_imdb_most_popular_celebs` `pimpc` on((lower(`pimpc`.`name`) = lower(`p`.`name`)))) group by `m`.`id_allocine` */;
+/*!50001 VIEW `movies_rank_celebrity` AS select `m`.`id_allocine` AS `id_allocine`,sum((101 - `pimpc`.`rank_celebrity`)) AS `actor_celebs` from (((`movies` `m` join `movie_actor` `ma` on((`ma`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `ma`.`id_person`))) join `pivot_imdb_most_popular_celebs` `pimpc` on((`pimpc`.`name` = `p`.`name`))) group by `m`.`id_allocine` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -522,7 +586,7 @@ CREATE TABLE `pivot_people` (
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `movies_rank_celebrity_by_year` AS select `m`.`id_allocine` AS `id_allocine`,sum((31 - `paad`.`rank_id`)) AS `actor_celebs` from (((`movies` `m` join `movie_actor` `ma` on((`ma`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `ma`.`id_person`))) join `pivot_actors_actresses_directors` `paad` on(((lower(`paad`.`name`) = lower(`p`.`name`)) and (`m`.`release_year` >= `paad`.`start_year`) and (`m`.`release_year` <= `paad`.`stop_year`)))) group by `m`.`id_allocine` */;
+/*!50001 VIEW `movies_rank_celebrity_by_year` AS select `m`.`id_allocine` AS `id_allocine`,sum((31 - `paad`.`rank_id`)) AS `actor_celebs` from (((`movies` `m` join `movie_actor` `ma` on((`ma`.`id_allocine` = `m`.`id_allocine`))) join `persons` `p` on((`p`.`id_person` = `ma`.`id_person`))) join `pivot_actors_actresses_directors` `paad` on(((`paad`.`name` = `p`.`name`) and (`m`.`release_year` >= `paad`.`start_year`) and (`m`.`release_year` <= `paad`.`stop_year`)))) group by `m`.`id_allocine` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -536,4 +600,4 @@ CREATE TABLE `pivot_people` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-09 12:54:04
+-- Dump completed on 2024-04-10 16:25:58
