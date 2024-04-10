@@ -2,5 +2,8 @@ from django.urls import path
 from app_maquette import views
 
 urlpatterns = [
-    path('', views.home_page, name='home'),
+    path('', views.prediction, name='prediction'),
+    path('film', views.film, name='film'),
+    path('resultat', views.resultat, name='resultat'),
+    path('historique', views.historique, name='historique'),
 ]

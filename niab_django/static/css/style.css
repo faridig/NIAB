@@ -14,3 +14,7 @@
 .back-to-top:hover {
     opacity: 1;
 }
+
+img:hover {
+    border-radius: 10px;
+}
