@@ -4,7 +4,7 @@ ALGORITHM = UNDEFINED VIEW `movies_actor_oscars` AS
     FROM movies m 
     JOIN movie_actor ma ON ma.id_allocine = m.id_allocine 
     JOIN persons p ON p.id_person = ma.id_person 
-    JOIN pivot_oscars po ON LOWER(po.winner) = LOWER(p.name )
+    JOIN pivot_oscars po ON po.winner = p.name
    WHERE po.year < m.release_year
 GROUP BY m.id_allocine;
 
@@ -14,7 +14,7 @@ ALGORITHM = UNDEFINED VIEW `movies_director_oscars` AS
     FROM movies m 
     JOIN movie_director md ON md.id_allocine = m.id_allocine
     JOIN persons p ON p.id_person = md.id_person 
-    JOIN pivot_oscars po ON LOWER(po.winner) = LOWER(m.title) 
+    JOIN pivot_oscars po ON po.winner = m.title 
    WHERE po.category IN ('Best Motion Picture of the Year',
                          'Best Picture',
                          'Best Achievement in Directing',
@@ -27,7 +27,7 @@ ALGORITHM = UNDEFINED VIEW `movies_rank_celebrity` AS
     FROM movies m 
     JOIN movie_actor ma ON ma.id_allocine = m.id_allocine
     JOIN persons p ON p.id_person = ma.id_person
-    JOIN pivot_imdb_most_popular_celebs pimpc ON LOWER(pimpc.name) = LOWER(p.name)
+    JOIN pivot_imdb_most_popular_celebs pimpc ON pimpc.name = p.name
 GROUP BY m.id_allocine;
 
 CREATE OR REPLACE
@@ -60,7 +60,21 @@ ALGORITHM = UNDEFINED VIEW `movies_people` AS
     FROM movies m 
     JOIN movie_actor ma ON ma.id_allocine = m.id_allocine
     JOIN persons p ON p.id_person = ma.id_person
-    JOIN pivot_people pp ON LOWER(pp.name) = LOWER(p.name)
+    JOIN pivot_people pp ON pp.name = p.name
+GROUP BY m.id_allocine;
+
+CREATE OR REPLACE
+ALGORITHM = UNDEFINED VIEW `movies_en_vacances` AS
+  SELECT m.id_allocine,
+         SUM(CASE WHEN pvf.vacances = "vacances d'Automne" THEN 1 ELSE 0 END) vacances_automne,
+         SUM(CASE WHEN pvf.vacances = "vacances de Noël" THEN 1 ELSE 0 END) vacances_noel,
+         SUM(CASE WHEN pvf.vacances = "vacances d'Hiver" THEN 1 ELSE 0 END) vacances_hiver,
+         SUM(CASE WHEN pvf.vacances = "vacances de Printemps" THEN 1 ELSE 0 END) vacances_printemps,
+         SUM(CASE WHEN pvf.vacances = "vacances d'Été" THEN 1 ELSE 0 END) vacances_ete,
+         COUNT(pvf.zone) nb_zone_en_vacances
+    FROM movies m 
+    LEFT OUTER JOIN pivot_vacances_francaise pvf ON m.release_date >= pvf.start_date
+                                                AND m.release_date <= pvf.stop_date
 GROUP BY m.id_allocine;
 
 CREATE OR REPLACE
@@ -90,6 +104,12 @@ SELECT m.id_allocine,
        mao.all_actor_oscars,
        mrc.actor_celebs,
        mrcby.actor_celebs actor_celebs_by_year,
+       mev.vacances_automne,
+       mev.vacances_noel,
+       mev.vacances_hiver,
+       mev.vacances_printemps,
+       mev.vacances_ete,
+       mev.nb_zone_en_vacances,
        mp.entries_mean_actor,
        mp.entries_sum_actor,
        mp.entries_mean_director,
@@ -106,4 +126,5 @@ SELECT m.id_allocine,
   LEFT OUTER JOIN movies_rank_celebrity mrc ON mrc.id_allocine = m.id_allocine
   LEFT OUTER JOIN movies_rank_celebrity_by_year mrcby ON mrcby.id_allocine = m.id_allocine
   LEFT OUTER JOIN movies_people mp ON mp.id_allocine = m.id_allocine
-  LEFT OUTER JOIN jpbox j ON j.id_allocine = m.id_allocine;
+  LEFT OUTER JOIN jpbox j ON j.id_allocine = m.id_allocine
+  LEFT OUTER JOIN movies_en_vacances mev ON mev.id_allocine = m.id_allocine;
