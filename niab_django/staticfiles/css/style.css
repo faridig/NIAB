@@ -5,3 +5,15 @@
         width: 100%;
     }
 }
+
+.back-to-top {
+    font-size: 40px;
+    opacity: 0.5;
+    border: none;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+.back-to-top:hover {
+    opacity: 1;
+}

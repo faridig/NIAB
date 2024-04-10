@@ -5,3 +5,12 @@
         width: 100%;
     }
 }
+
+.back-to-top {
+    opacity: 0.5;
+    z-index: 9999;
+}
+
+.back-to-top:hover {
+    opacity: 1;
+}
