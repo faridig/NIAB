@@ -5,9 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock title %} - NIAB</title>
-    <meta content="auteur" name="NIAB">
-    <meta content="description" name="New Is Always Better">
+    <title>{{ title_before }}{% block title %}{% endblock title %}{{ title_after }}</title>
+    <meta content="auteur" name="{{ auteur }}">
+    <meta content="description" name="{{ description }}">
     <link rel="icon" href="{% static "images/favicon.ico" %}" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static "css/style.css" %}">

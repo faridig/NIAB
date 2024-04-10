@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Prédictions pour la semaine prochaine{% endblock title %}
+
+{% block content %}
+
+<h1 class="text-3xl text-gray-500 py-4">Prédictions pour la semaine prochaine</h1>
+
+<form method="post" action="url">
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top;">
+            <input name="box_id_allocine_1" checked="checked" type="checkbox">
+          </td>
+          <td style="vertical-align: top;">
+            <strong><a href="{% url "film" %}?id_allocine=123">Titanic 3</a></strong> de Jean Kameronne<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <input class="text-6xl" name="box_id_allocine_1" type="checkbox">
+          </td>
+          <td style="vertical-align: top;">
+            <strong>La Princesse des glaçons</strong> de Mô Rïto
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+  
+  </form>
+
+{% endblock content %}
