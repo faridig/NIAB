@@ -119,7 +119,8 @@ SELECT m.id_allocine,
        j.copies jpbox_copies,
        m.imdb_entries,
        m.imdb_us_entries,
-       m.imdb_id
+       m.imdb_id,
+       m.entries
   FROM movies m
   LEFT OUTER JOIN movies_director_oscars mdo ON mdo.id_allocine = m.id_allocine
   LEFT OUTER JOIN movies_actor_oscars mao ON mao.id_allocine = m.id_allocine
