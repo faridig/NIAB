@@ -77,6 +77,43 @@ ALGORITHM = UNDEFINED VIEW `movies_en_vacances` AS
                                                 AND m.release_date <= pvf.stop_date
 GROUP BY m.id_allocine;
 
+
+DELETE FROM actor_cum_entries;
+
+SET @last_person := NULL;
+SET @cumulative_entries := 0;
+
+INSERT INTO actor_cum_entries
+SELECT id_person, release_date, 
+       CASE 
+           WHEN id_person <> @last_person THEN @cumulative_entries := entries 
+           ELSE @cumulative_entries := @cumulative_entries + entries
+       END AS cumulative_entries,
+       entries,
+       @last_person := id_person AS dummy,
+       id_allocine
+FROM (
+    SELECT ma.id_person, m.id_allocine, m.release_date, m.entries
+    FROM movie_actor ma
+    JOIN movies m ON m.id_allocine = ma.id_allocine
+    WHERE m.entries IS NOT NULL
+    ORDER BY ma.id_person, m.release_date
+) AS subquery;
+
+CREATE OR REPLACE
+ALGORITHM = UNDEFINED VIEW `movies_actor_cumulative_entries` AS
+SELECT tt.id_allocine, SUM(tt.cumulative_entries) cumulative_entries
+  FROM (
+  SELECT m.id_allocine,
+  		 ace.id_person,
+  		 MAX(ace.cumulative_entries) cumulative_entries
+    FROM movies m 
+    JOIN movie_actor ma ON ma.id_allocine = m.id_allocine
+    JOIN actor_cum_entries ace ON ace.id_person = ma.id_person
+   WHERE ace.release_date < m.release_date                                 
+GROUP BY m.id_allocine, ace.id_person) as tt
+GROUP BY tt.id_allocine;
+
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `db_to_ml` AS
 SELECT m.id_allocine,
@@ -120,6 +157,7 @@ SELECT m.id_allocine,
        m.imdb_entries,
        m.imdb_us_entries,
        m.imdb_id,
+       mace.cumulative_entries,
        m.entries
   FROM movies m
   LEFT OUTER JOIN movies_director_oscars mdo ON mdo.id_allocine = m.id_allocine
@@ -128,4 +166,5 @@ SELECT m.id_allocine,
   LEFT OUTER JOIN movies_rank_celebrity_by_year mrcby ON mrcby.id_allocine = m.id_allocine
   LEFT OUTER JOIN movies_people mp ON mp.id_allocine = m.id_allocine
   LEFT OUTER JOIN jpbox j ON j.id_allocine = m.id_allocine
-  LEFT OUTER JOIN movies_en_vacances mev ON mev.id_allocine = m.id_allocine;
+  LEFT OUTER JOIN movies_en_vacances mev ON mev.id_allocine = m.id_allocine
+  LEFT OUTER JOIN movies_actor_cumulative_entries mace ON mace.id_allocine = m.id_allocine;
