@@ -1,7 +1,11 @@
 from django.shortcuts import render
+from .utils import niab_settings
 
 def prediction(request):
-    return render(request, 'app_main/prediction.html')
+    settings = niab_settings()
+    data = []
+    data.append(settings['fixed_costs'])
+    return render(request, 'app_main/prediction.html', {'data': data})
 
 def film(request):
     return render(request, 'app_main/film.html')
