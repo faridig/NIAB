@@ -151,13 +151,12 @@ SELECT m.id_allocine,
        mp.entries_sum_actor,
        mp.entries_mean_director,
        mp.entries_sum_director,
-       mp.entries_mean_composer,
-       mp.entries_sum_composer,
        j.copies jpbox_copies,
        m.imdb_entries,
        m.imdb_us_entries,
        m.imdb_id,
        mace.cumulative_entries,
+       m.distributors,
        m.entries
   FROM movies m
   LEFT OUTER JOIN movies_director_oscars mdo ON mdo.id_allocine = m.id_allocine
