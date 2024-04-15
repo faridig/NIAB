@@ -1,0 +1,5 @@
+mysql
+mysqlclient
+mysql-connector-python
+python-dotenv<2
+pandas<3
