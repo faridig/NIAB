@@ -1,6 +1,9 @@
+bpython<1
 django<5
 django-dotenv<2
+loguru<1
 mysql<2
 mysqlclient<3
+scrapy<3
 sqlparse<2
 whitenoise<7
