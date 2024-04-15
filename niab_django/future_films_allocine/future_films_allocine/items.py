@@ -6,7 +6,18 @@
 import scrapy
 
 
-class FutureFilmsAllocineItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class FilmItem(scrapy.Item):
+    film_id = scrapy.Field()
+    title = scrapy.Field()
+    img_src = scrapy.Field()
+    release = scrapy.Field()
+    duration = scrapy.Field()
+    genres = scrapy.Field()
+    synopsis = scrapy.Field()
+    nationality = scrapy.Field()
+    distributor = scrapy.Field()
+    budget = scrapy.Field()
+    director = scrapy.Field()
+    casting = scrapy.Field()
+    copies = scrapy.Field()
+    entries = scrapy.Field()
