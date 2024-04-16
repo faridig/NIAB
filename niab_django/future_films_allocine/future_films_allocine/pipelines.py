@@ -10,7 +10,7 @@ from loguru import logger
 import mysql.connector
 
 from .utils import convert_dates, convert_duration
-import dot_env
+from future_films_allocine import dot_env
 
 
 LIST_FIELDS = ("casting", "director", "genres", "nationality")
