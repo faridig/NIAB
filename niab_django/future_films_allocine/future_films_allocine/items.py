@@ -21,3 +21,8 @@ class FilmItem(scrapy.Item):
     casting = scrapy.Field()
     copies = scrapy.Field()
     pred_entries = scrapy.Field()
+
+
+class Week1Item(scrapy.Item):
+    film_id = scrapy.Field()
+    true_entries = scrapy.Field()
