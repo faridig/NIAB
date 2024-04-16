@@ -28,31 +28,31 @@ class CleanPipeline:
                 value = [item.strip() for item in value]
                 adapter[field] = "|".join(value)
             except BaseException:
-                adapter[field] = None
+                adapter[field] = 'NULL'
 
         # Release (convert it to format 'YYYY-MM-DD')
         release = adapter.get("release")
         if release is not None:
             adapter["release"] = convert_dates(release)
         else:
-            adapter["release"] = None
+            adapter["release"] = 'NULL'
 
         # Duration (convert to minutes)
         duration = adapter.get("duration")
         if duration is not None:
             adapter["duration"] = convert_duration(duration)
         else:
-            adapter["duration"] = None
+            adapter["duration"] = 'NULL'
         
         # Budget (remove trailing spaces, but keep currency symbol)
         budget = adapter.get("budget")
         if budget is not None:
             if budget == '-':
-                adapter["budget"] = None
+                adapter["budget"] = 'NULL'
             else:
                 adapter["budget"] = budget.replace(" ", "")
         else:
-            adapter["budget"] = None
+            adapter["budget"] = 'NULL'
    
         return item
 
@@ -97,9 +97,9 @@ class IncomingToMySQLPipeline:
                 pivot_genres, synopsis, nationality, distributor,
                 budget, pivot_director, pivot_casting, copies, pred_entries
                 )
-            VALUES ({id_allocine}, {title}, {img_src}, {release_date}, {duration},
-                    {pivot_genres}, {synopsis}, {nationality}, {distributor},
-                    {budget}, {pivot_director}, {pivot_casting}, {copies}, {pred_entries})
+            VALUES ({id_allocine}, "{title}", "{img_src}", "{release_date}", {duration},
+                    "{pivot_genres}", "{synopsis}", "{nationality}", "{distributor}",
+                    "{budget}", "{pivot_director}", "{pivot_casting}", {copies}, {pred_entries})
             """
             self.cur.execute(request)
         except BaseException as e:

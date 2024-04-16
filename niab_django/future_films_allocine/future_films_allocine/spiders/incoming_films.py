@@ -130,6 +130,6 @@ class IncomingFilmsSpider(scrapy.Spider):
         item["casting"] = response.css('section.casting-actor *.meta-title-link::text').getall()
 
         # Don't forget the prediction field! ;)
-        item["pred_entries"] = None
+        item["pred_entries"] = 'NULL'
         
         yield item
