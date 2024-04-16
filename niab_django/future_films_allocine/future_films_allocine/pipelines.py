@@ -112,3 +112,43 @@ class IncomingToMySQLPipeline:
     def close_spider(self, spider):
         self.cur.close()
         self.conn.close()
+
+
+class Week1ToMySQLPipeline:
+    def __init__(self):
+        # Connect to BDD
+        print()
+        print(">>>>>>>>>>>INIT WEEK ONE MOVIES<<<<<<<<<<<<<<<")
+        self.conn = mysql.connector.connect(
+            host = dot_env.FUNCTIONAL_HOST,
+            user = dot_env.FUNCTIONAL_USER,
+            password = dot_env.FUNCTIONAL_PASSWORD,
+            database = dot_env.FUNCTIONAL_DATABASE,
+            ssl_ca=dot_env.FUNCTIONAL_SSL
+        )
+
+        self.cur = self.conn.cursor()
+
+    def process_item(self, item, spider):
+        print()
+        print(">>>>>>>>>>>UPDATE WEEK ONE MOVIES<<<<<<<<<<<<<<<")
+        try:
+            id_allocine = item["id_allocine"]
+            true_entries = item["true_entries"]
+
+            request = f"""
+            UPDATE movies_w1
+               SET true_entries={true_entries}
+             WHERE id_allocine={id_allocine}
+            """
+            self.cur.execute(request)
+        except BaseException as e:
+            print(e)
+            print("request =", request)
+
+        self.conn.commit()
+        return item
+    
+    def close_spider(self, spider):
+        self.cur.close()
+        self.conn.close()
