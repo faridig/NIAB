@@ -20,4 +20,4 @@ class FilmItem(scrapy.Item):
     director = scrapy.Field()
     casting = scrapy.Field()
     copies = scrapy.Field()
-    entries = scrapy.Field()
+    pred_entries = scrapy.Field()

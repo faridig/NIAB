@@ -129,7 +129,7 @@ class IncomingFilmsSpider(scrapy.Spider):
         item["director"] = response.css('section.casting-director a::text').getall()
         item["casting"] = response.css('section.casting-actor *.meta-title-link::text').getall()
 
-        # Don't forget the target! ;)
-        item["entries"] = None
+        # Don't forget the prediction field! ;)
+        item["pred_entries"] = None
         
         yield item

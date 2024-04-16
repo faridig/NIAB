@@ -89,17 +89,17 @@ class IncomingToMySQLPipeline:
             pivot_director = item["director"]
             pivot_casting = item["casting"]
             copies = item["copies"]
-            entries = item["entries"]
+            pred_entries = item["pred_entries"]
 
             request = f"""
             INSERT INTO movies_w0 (
                 id_allocine, title, img_src, release_date, duration,
                 pivot_genres, synopsis, nationality, distributor,
-                budget, pivot_director, pivot_casting, copies, entries
+                budget, pivot_director, pivot_casting, copies, pred_entries
                 )
             VALUES ({id_allocine}, {title}, {img_src}, {release_date}, {duration},
                     {pivot_genres}, {synopsis}, {nationality}, {distributor},
-                    {budget}, {pivot_director}, {pivot_casting}, {copies}, {entries})
+                    {budget}, {pivot_director}, {pivot_casting}, {copies}, {pred_entries})
             """
             self.cur.execute(request)
         except BaseException as e:
