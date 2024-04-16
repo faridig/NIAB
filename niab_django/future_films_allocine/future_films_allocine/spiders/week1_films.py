@@ -40,8 +40,8 @@ class Week1FilmsSpider(scrapy.Spider):
 
         for film_id in film_ids:
             item = Week1Item()
-            item["id_allocine"] = film_id
-            film_box_office_url = f"{BASE_URL}{film_id}/box-office/"
+            item["film_id"] = film_id[0]
+            film_box_office_url = f"{BASE_URL}{film_id[0]}/box-office/"
             yield scrapy.Request(url = film_box_office_url,
                                 callback = self.parse_film_box_office_page,
                                 meta = {"item": item})

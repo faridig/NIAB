@@ -133,13 +133,13 @@ class Week1ToMySQLPipeline:
         print()
         print(">>>>>>>>>>>UPDATE WEEK ONE MOVIES<<<<<<<<<<<<<<<")
         try:
-            id_allocine = item["id_allocine"]
+            film_id = item["film_id"]
             true_entries = item["true_entries"]
 
             request = f"""
             UPDATE movies_w1
                SET true_entries={true_entries}
-             WHERE id_allocine={id_allocine}
+             WHERE id_allocine={film_id}
             """
             self.cur.execute(request)
         except BaseException as e:
