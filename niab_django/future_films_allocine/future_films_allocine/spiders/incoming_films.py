@@ -60,7 +60,7 @@ class IncomingFilmsSpider(scrapy.Spider):
         next_wed_str = response.meta["next_wed_str"]
         film_info = response.xpath('//div[@class="meta-body-item meta-body-info"]')
         # Filter films not released in theatres
-        display = film_info.xpath('.//strong/text()').get().strip()
+        display = film_info.css("span.meta-release-type::text").get().strip()
         if display == "en salle":
             # Filter concerts, festivals and opera
             film_info = film_info.xpath('.//span/text()').getall()
