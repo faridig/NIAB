@@ -19,7 +19,9 @@ class IncomingFilmsSpider(scrapy.Spider):
     name = "incoming_films"
 
     custom_settings = {
-        'ITEM_PIPELINES': {"future_films_allocine.pipelines.CleanPipeline": 100}
+        'ITEM_PIPELINES': {
+            "future_films_allocine.pipelines.CleanPipeline": 100,
+            "future_films_allocine.pipelines.IncomingToMySQLPipeline": 200}
     }
 
     @logger.catch
