@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .utils import niab_settings
-from .models import Movies
+from .models import Movies, Halls
+from datetime import datetime, timedelta
 
 
 def settings():
@@ -18,7 +19,13 @@ def error_404(request, exception):
 @login_required
 def prediction(request):
     movies = Movies.objects.all()
-    return render(request, 'app_main/prediction.html', {'movies': movies})
+    halls = Halls.objects.all()
+    # prochain mercredi :
+    today = datetime.now() # Trouver la date d'aujourd'hui
+    weekday = today.weekday() # Trouver le jour de la semaine (lundi = 0, mardi = 1, ..., dimanche = 6)
+    days_until_wednesday = (2 - weekday + 7) % 7 # Calculer le nombre de jours jusqu'au prochain mercredi
+    next_wednesday = today + timedelta(days=days_until_wednesday) # Ajouter ces jours à la date d'aujourd'hui pour obtenir la date du prochain mercredi
+    return render(request, 'app_main/prediction.html', {'movies': movies, 'halls': halls, 'next_wednesday': next_wednesday})
 
 
 @login_required

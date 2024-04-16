@@ -5,37 +5,52 @@
 {% block content %}
 
 <h1 class="text-3xl text-gray-500 py-4">Prédictions pour la semaine prochaine</h1>
-<h2 class="text-2xl text-gray-500 py-4">Du YYYY-MM-DD au YYYY-MM-DD</h2>
+<h2 class="text-2xl text-gray-500 py-4">Prochain mercredi : {{ next_wednesday }}</h2>
+<form method="post" action="prediction.html">
+  <input name="sub_save" value="Enregistrer" type="submit">
 
-<div class="container mx-auto">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    {% for movie in movies %}
-    <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 p-4 shadow-md rounded-lg flex items-center">
-      
-      <div class="mr-4">
-        <span class="text-xl font-bold mr-4">{{ forloop.counter }}</span>
-        <p>Prédiction sion sion</p>
-      </div>
-      
-      <a href="{% url "film" %}?id_allocine={{ movie.id_allocine }}">
-        <img src="https://fr.web.img6.acsta.net/c_310_420/pictures/23/01/10/16/06/0622119.jpg" alt="✘" class="w-12 h-30 rounded-md mr-4">
-      </a>
-
-      <div>
+  <div class="container mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {% for movie in movies %}
+      <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 p-4 shadow-md rounded-lg flex items-center">
+        
+        <div class="mr-4">
+          <span class="text-xl font-bold mr-4">{{ forloop.counter }}</span>
+          <p>Prédiction</p>
+          {% for hall in halls %}
+            <p>
+              <label class="inline-flex items-center">
+                {% comment %} <input type="checkbox" class="form-checkbox text-indigo-500 h-5 w-5"> {% endcomment %}
+                <input name="{{ hall.name }}" value="{{ movie.id_allocine }}" type="radio">
+                <span class="ml-2">{{ hall.name }}</span>
+              </label>
+            </p>
+          {% endfor %}
+        </div>
+        
         <a href="{% url "film" %}?id_allocine={{ movie.id_allocine }}">
-          <h2 class="text-lg font-semibold mb-2">{{ movie.title }}</h2>
+          <img src="https://fr.web.img6.acsta.net/c_310_420/pictures/23/01/10/16/06/0622119.jpg" alt="✘" class="w-12 h-30 rounded-md mr-4">
         </a>
-        <p class="text-sm mb-2">Réalisateur : {{ movie.director }}</p>
-        <p class="text-sm mb-2">Acteurs : {{ movie.actors }}</p>
-        <label class="inline-flex items-center">
-          <input type="checkbox" class="form-checkbox text-indigo-500 h-5 w-5">
-          <span class="ml-2">Ajouter à la sélection</span>
-        </label>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
 
+        <div>
+          <a href="{% url "film" %}?id_allocine={{ movie.id_allocine }}">
+            <h2 class="text-lg font-semibold mb-2">{{ movie.title }}</h2>
+          </a>
+          <p class="text-sm mb-2">Réalisateur : {{ movie.director }}</p>
+          <p class="text-sm mb-2">Acteurs : {{ movie.actors }}</p>
+          {% comment %} <label class="inline-flex items-center">
+            <input type="checkbox" class="form-checkbox text-indigo-500 h-5 w-5">
+            <span class="ml-2">Ajouter à la sélection</span>
+          </label> {% endcomment %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="flex justify-center mt-8">
+    <input name="sub_save" value="Enregistrer" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+  </div>
+</form>
 
 {% endblock content %}

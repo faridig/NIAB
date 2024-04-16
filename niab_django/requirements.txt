@@ -1,4 +1,11 @@
-django<5
+icative dans le domaine de la qualité des données, je suis
+convaincu que mon profil est en adéquation avec les besoins actuels de votre entreprise. En tant
+qu'ingénieur qualification et support, j'ai eu l'opportunité de mettre en place des stratégies de tests
+automatisés et de développer des applications orientées données, où la qualité des données était un
+élément central de nos processus.
+Au fil de mes années d'expérience, j'ai acquis une expertise dans la mise en place de processus
+visant à garantir la qualité et la fiabilité des données, ainsi que dans l'identification et la résolution
+des problèmes liés à la qualité des données. Je suis convaincu qdjango<5
 django-dotenv<2
 mysql<2
 mysqlclient<3
