@@ -29,7 +29,6 @@ class Movies(models.Model):
     audience       = models.CharField(max_length=255, null=True, blank=True)
     societies      = models.TextField(max_length=255, null=True, blank=True)
     copies         = models.IntegerField(max_length=8, null=True, blank=True)
-    num_hall       = models.CharField(max_length=255, null=True, blank=True)
     pred_entries   = models.IntegerField(max_length=8, null=True, blank=True)
     true_entries   = models.IntegerField(max_length=8, null=True, blank=True)
 
@@ -60,7 +59,6 @@ class MoviesW1(models.Model):
     audience       = models.CharField(max_length=255, null=True, blank=True)
     societies      = models.TextField(max_length=255, null=True, blank=True)
     copies         = models.IntegerField(max_length=8, null=True, blank=True)
-    num_hall       = models.CharField(max_length=255, null=True, blank=True)
     pred_entries   = models.IntegerField(max_length=8, null=True, blank=True)
     true_entries   = models.IntegerField(max_length=8, null=True, blank=True)
 

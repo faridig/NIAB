@@ -80,7 +80,7 @@ SELECT m.id_allocine,
       ORDER BY mg.genre) AS genres,
        m.duration duration_m,
        m.synopsis,
-       m.release_date,
+       DATE_FORMAT(m.release_date, '%Y-%m-%d') release_date,
        m.societies,
        m.nationality,
        (SELECT GROUP_CONCAT(p.name SEPARATOR ',')

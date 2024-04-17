@@ -106,3 +106,21 @@ CREATE TABLE `pred_imdb_most_popular_celebs` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`rank_celebrity`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `movie_w0_hall` (
+  `id_allocine` int NOT NULL,
+  `hall` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_allocine`,`hall`),
+  KEY `movie_w0_hall_halls_FK` (`hall`),
+  CONSTRAINT `movie_w0_hall_halls_FK` FOREIGN KEY (`hall`) REFERENCES `halls` (`name`) ON DELETE CASCADE,
+  CONSTRAINT `movie_w0_hall_movies_w0_FK` FOREIGN KEY (`id_allocine`) REFERENCES `movies_w0` (`id_allocine`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `movie_w1_hall` (
+  `id_allocine` int NOT NULL,
+  `hall` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_allocine`,`hall`),
+  KEY `movie_w1_hall_halls_FK` (`hall`),
+  CONSTRAINT `movie_w1_hall_halls_FK` FOREIGN KEY (`hall`) REFERENCES `halls` (`name`) ON DELETE CASCADE,
+  CONSTRAINT `movie_w1_hall_movies_w1_FK` FOREIGN KEY (`id_allocine`) REFERENCES `movies_w1` (`id_allocine`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
