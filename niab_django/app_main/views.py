@@ -18,13 +18,19 @@ def error_404(request, exception):
 
 @login_required
 def prediction(request):
-    movies = Movies.objects.all()
-    halls = Halls.objects.all()
+    movies = Movies.objects.all().order_by('-pred_entries')
+    halls = Halls.objects.all().order_by('-number_of_seats')
     # prochain mercredi :
     today = datetime.now() # Trouver la date d'aujourd'hui
     weekday = today.weekday() # Trouver le jour de la semaine (lundi = 0, mardi = 1, ..., dimanche = 6)
     days_until_wednesday = (2 - weekday + 7) % 7 # Calculer le nombre de jours jusqu'au prochain mercredi
     next_wednesday = today + timedelta(days=days_until_wednesday) # Ajouter ces jours à la date d'aujourd'hui pour obtenir la date du prochain mercredi
+
+    if request.method == 'POST':
+        for movie in movies:
+            if movie.id_allocine == int(request.POST.get('Blockbuster')):
+                print(movie.title)
+
     return render(request, 'app_main/prediction.html', {'movies': movies, 'halls': halls, 'next_wednesday': next_wednesday})
 
 

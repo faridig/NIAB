@@ -1,3 +1,7 @@
+CREATE DEFINER=`niabadmin`@`%` TRIGGER `movies_w0_bi` BEFORE INSERT ON `movies_w0` FOR EACH ROW BEGIN
+    SET NEW.release_year = YEAR(NEW.release_date);
+END
+
 CREATE DEFINER=`niabadmin`@`%` TRIGGER `movies_w0_ai` AFTER INSERT ON `movies_w0` FOR EACH ROW BEGIN
     DECLARE i_id_allocine INT;
     DECLARE i_id_person   INT;
