@@ -112,7 +112,7 @@ class IncomingFilmsSpider(scrapy.Spider):
                         copies = int(re.search(r"\d+", raw_copies).group())
                         item["copies"] = copies
                     except BaseException:
-                        item["copies"] = None
+                        item["copies"] = 'NULL'
 
                     # Follow the casting page
                     casting_page_url = f"https://www.allocine.fr/film/fichefilm-{item['film_id']}/casting/"

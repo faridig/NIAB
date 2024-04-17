@@ -80,7 +80,10 @@ class IncomingToMySQLPipeline:
             title = item["title"]
             img_src = item["img_src"]
             release_date = item["release"]
-            duration = item["duration"]
+            if item["duration"] is None:
+                duration = 'NULL'
+            else:
+                duration = item["duration"]
             pivot_genres = item["genres"]
             synopsis = item["synopsis"]
             nationality = item["nationality"]
