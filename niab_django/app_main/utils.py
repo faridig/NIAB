@@ -27,6 +27,7 @@ def mysql_request(cur, request: str, logging, info):
     logging.info('# MySQL # : ' + info)
     try:
         cur.execute(request)
+        return cur.fetchall()
     except Exception as e:
         if '1062' in str(e):
             logging.warning(e)

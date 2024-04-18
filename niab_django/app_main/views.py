@@ -4,10 +4,14 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 import logging
 import pathlib
+import os
+import json
 
 from .utils import niab_settings, functional_conn, mysql_request
 from .models import Movies, Halls
 
+
+DEBUG =  os.environ.get('DEBUG') == '1'
 
 logfile = str(pathlib.Path(__file__).resolve().parent.parent) + '/logs/app_main.log'
 # Configuration du logger
@@ -35,6 +39,9 @@ def prediction(request):
     logging.info('def prediction')
     logging.info('--------------------')
 
+    conn = functional_conn()
+    cur = conn.cursor()
+
     movies = Movies.objects.all().order_by('-pred_entries')
     halls = Halls.objects.all().order_by('-number_of_seats')
     # prochain mercredi :
@@ -44,27 +51,30 @@ def prediction(request):
     next_wednesday = today + timedelta(days=days_until_wednesday) # Ajouter ces jours à la date d'aujourd'hui pour obtenir la date du prochain mercredi
 
     if request.method == 'POST':
-        conn = functional_conn()
-        cur = conn.cursor()
-
         # réinitialisation de la table de liens
         niab_request = "DELETE FROM movie_w0_hall;"
         mysql_request(cur, niab_request, logging, "réinitialisation de la table de liens")
 
         for hall in halls:
-            logging.info("HALL : " + hall.name)
+            if DEBUG: logging.info("HALL : " + hall.hall_name)
             for movie in movies:
-                logging.info("MOVIE [ " + str(movie.id_allocine) + " ] : " + movie.title)
-                
-                if type(request.POST.get(hall.name)) in (int, str):
-                    if movie.id_allocine == int(request.POST.get(hall.name)):
-                        niab_request = f'INSERT INTO movie_w0_hall VALUES ({movie.id_allocine}, "{hall.name}");'
-                        mysql_request(cur, niab_request, logging, "INSERT INTO")
+                if DEBUG: logging.info("MOVIE [ " + str(movie.id_allocine) + " ] : " + movie.title)
+                if type(request.POST.get(hall.hall_name)) in (int, str):
+                    if movie.id_allocine == int(request.POST.get(hall.hall_name)):
+                        niab_request = f'''INSERT INTO movie_w0_hall (id_allocine, hall_name)
+                                                VALUES ({movie.id_allocine}, "{hall.hall_name}");'''
+                        mysql_request(cur, niab_request, logging, "INSERT movie_w0_hall")
 
-        conn.commit()
-        conn.close()
+    niab_request = "SELECT * FROM w0_movies;"
+    movies = mysql_request(cur, niab_request, logging, "SELECT ALL w0_movies")
+    # movies = json.dumps(movies)
 
-    return render(request, 'app_main/prediction.html', {'movies': movies, 'halls': halls, 'next_wednesday': next_wednesday})
+    conn.commit()
+    conn.close()
+    print(movies)
+    return render(request, 'app_main/prediction.html', {'movies': movies,
+                                                        'halls': halls,
+                                                        'next_wednesday': next_wednesday})
 
 
 @login_required

@@ -14,34 +14,35 @@
   </div>
   <br>
   <div class="container mx-auto">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {% for movie in movies %}
       <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 p-4 shadow-md rounded-lg flex items-center">
         
         <div class="mr-4">
           <span class="text-xl text-red-500 font-bold mr-1">{{ forloop.counter }}</span>
-          <span class="text-sl italic mr-1">{{ movie.pred_entries }}</span>
+          <span class="text-sl italic mr-1">{{ movie.1 }}</span>
           {% for hall in halls %}
             <p>
               <label class="inline-flex items-center">
                 {% comment %} <input type="checkbox" class="form-checkbox text-indigo-500 h-5 w-5"> {% endcomment %}
-                <input name="{{ hall.name }}" value="{{ movie.id_allocine }}" type="radio">
-                <span class="ml-2">{{ hall.name }}</span>
+                <input name="{{ hall.hall_name }}" value="{{ movie.0 }}" type="radio">
+                <span class="ml-2">{{ hall.hall_name }}</span>
               </label>
             </p>
           {% endfor %}
         </div>
         
-        <a href="{% url "film" %}?id_allocine={{ movie.id_allocine }}">
-          <img src="https://fr.web.img6.acsta.net/c_310_420/pictures/23/01/10/16/06/0622119.jpg" alt="✘" class="w-12 h-30 rounded-md mr-4">
+        <a href="{% url "film" %}?id_allocine={{ movie.0 }}">
+          <img src="{{ movie.4 }}" alt="✘" class="rounded-md mr-4" style="width: 50px; height: 75px; min-width: 50px; min-height: 75px;">
         </a>
 
         <div>
-          <a href="{% url "film" %}?id_allocine={{ movie.id_allocine }}">
-            <h2 class="text-lg font-semibold mb-2">{{ movie.title }}</h2>
+          <a href="{% url "film" %}?id_allocine={{ movie.0 }}">
+            <h2 class="text-lg font-semibold mb-2">{{ movie.3 }}</h2>
           </a>
-          <p class="text-sm mb-2">Réalisateur : {{ movie.director }}</p>
-          <p class="text-sm mb-2">Acteurs : {{ movie.actors }}</p>
+          <p class="text-sm mb-2">Réalisateur : {{ movie.5 }}</p>
+          <p class="text-sm mb-2">Acteurs : {{ movie.6 }}</p>
+          <p class="text-sm mb-2">Genres{{ movie.7 }}</p>
           {% comment %} <label class="inline-flex items-center">
             <input type="checkbox" class="form-checkbox text-indigo-500 h-5 w-5">
             <span class="ml-2">Ajouter à la sélection</span>

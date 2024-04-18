@@ -11,7 +11,7 @@ def main():
     DEBUG = os.environ.get('DEBUG') == '1'
 
     if DEBUG :
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'niab_django.settings.prod')
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'niab_django.settings.dev')
     else :
         os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'niab_django.settings.prod')
 

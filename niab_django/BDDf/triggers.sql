@@ -1,3 +1,11 @@
+CREATE DEFINER=`niabadmin`@`%` TRIGGER `movie_w0_hall_bi` BEFORE INSERT ON `movie_w0_hall` FOR EACH ROW BEGIN
+    SET NEW.ticket_price = SELECT ticket_price FROM halls WHERE hall_name = NEW.hall_name;
+END
+
+CREATE DEFINER=`niabadmin`@`%` TRIGGER `movies_history_bi` BEFORE INSERT ON `movies_history` FOR EACH ROW BEGIN
+    SET NEW.history_date = CURDATE();
+END
+
 CREATE DEFINER=`niabadmin`@`%` TRIGGER `movies_w0_bi` BEFORE INSERT ON `movies_w0` FOR EACH ROW BEGIN
     SET NEW.release_year = YEAR(NEW.release_date);
 END
