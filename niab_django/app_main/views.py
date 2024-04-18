@@ -67,11 +67,10 @@ def prediction(request):
 
     niab_request = "SELECT * FROM w0_movies;"
     movies = mysql_request(cur, niab_request, logging, "SELECT ALL w0_movies")
-    # movies = json.dumps(movies)
 
     conn.commit()
     conn.close()
-    print(movies)
+    
     return render(request, 'app_main/prediction.html', {'movies': movies,
                                                         'halls': halls,
                                                         'next_wednesday': next_wednesday})
@@ -79,7 +78,24 @@ def prediction(request):
 
 @login_required
 def film(request):
-    return render(request, 'app_main/film.html')
+    logging.info('--------------------')
+    logging.info('def film')
+    logging.info('--------------------')
+
+    conn = functional_conn()
+    cur = conn.cursor()
+
+    id_allocine = int(request.GET.get('id_allocine', '0'))
+
+    niab_request = f'''SELECT *
+                        FROM w0_movies
+                       WHERE id_allocine = {id_allocine};'''
+    movies = mysql_request(cur, niab_request, logging, "SELECT ONE w0_movies")
+
+    conn.commit()
+    conn.close()
+
+    return render(request, 'app_main/film.html', {'movies': movies})
 
 
 @login_required

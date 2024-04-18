@@ -109,7 +109,7 @@ SELECT m.id_allocine,
   
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `w0_directors` AS
-  SELECT mw.id_allocine, GROUP_CONCAT(p.name SEPARATOR ',') directors
+  SELECT mw.id_allocine, GROUP_CONCAT(p.name SEPARATOR ', ') directors
     FROM movies_w0 mw 
     LEFT OUTER JOIN movie_w0_director mwd ON mwd.id_allocine = mw.id_allocine
     LEFT OUTER JOIN persons p ON p.id_person = mwd.id_person
@@ -117,7 +117,7 @@ GROUP BY mw.id_allocine;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `w1_directors` AS
-  SELECT mw.id_allocine, GROUP_CONCAT(p.name SEPARATOR ',') directors
+  SELECT mw.id_allocine, GROUP_CONCAT(p.name SEPARATOR ', ') directors
     FROM movies_w1 mw 
     LEFT OUTER JOIN movie_w1_director mwd ON mwd.id_allocine = mw.id_allocine
     LEFT OUTER JOIN persons p ON p.id_person = mwd.id_person
@@ -125,7 +125,7 @@ GROUP BY mw.id_allocine;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `w0_actors` AS
-  SELECT mw.id_allocine, GROUP_CONCAT(p.name SEPARATOR ',') actors
+  SELECT mw.id_allocine, GROUP_CONCAT(p.name SEPARATOR ', ') actors
     FROM movies_w0 mw 
     LEFT OUTER JOIN movie_w0_actor mwd ON mwd.id_allocine = mw.id_allocine
     LEFT OUTER JOIN persons p ON p.id_person = mwd.id_person
@@ -133,7 +133,7 @@ GROUP BY mw.id_allocine;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `w1_actors` AS
-  SELECT mw.id_allocine, GROUP_CONCAT(p.name SEPARATOR ',') actors
+  SELECT mw.id_allocine, GROUP_CONCAT(p.name SEPARATOR ', ') actors
     FROM movies_w1 mw 
     LEFT OUTER JOIN movie_w1_actor mwd ON mwd.id_allocine = mw.id_allocine
     LEFT OUTER JOIN persons p ON p.id_person = mwd.id_person
@@ -141,7 +141,7 @@ GROUP BY mw.id_allocine;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `w0_genres` AS
-  SELECT mw.id_allocine, GROUP_CONCAT(g.genre SEPARATOR ',') genres
+  SELECT mw.id_allocine, GROUP_CONCAT(g.genre SEPARATOR ', ') genres
     FROM movies_w0 mw 
     LEFT OUTER JOIN movie_w0_genre mwd ON mwd.id_allocine = mw.id_allocine
     LEFT OUTER JOIN genres g ON g.genre = mwd.genre
@@ -149,7 +149,7 @@ GROUP BY mw.id_allocine;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `w1_genres` AS
-  SELECT mw.id_allocine, GROUP_CONCAT(g.genre SEPARATOR ',') genres
+  SELECT mw.id_allocine, GROUP_CONCAT(g.genre SEPARATOR ', ') genres
     FROM movies_w1 mw 
     LEFT OUTER JOIN movie_w1_genre mwd ON mwd.id_allocine = mw.id_allocine
     LEFT OUTER JOIN genres g ON g.genre = mwd.genre
@@ -157,14 +157,14 @@ GROUP BY mw.id_allocine;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `w0_halls` AS
-  SELECT mw.id_allocine, GROUP_CONCAT(mwh.hall_name SEPARATOR ',') halls
+  SELECT mw.id_allocine, GROUP_CONCAT(mwh.hall_name SEPARATOR ', ') halls
     FROM movies_w0 mw
     LEFT OUTER JOIN movie_w0_hall mwh ON mwh.id_allocine = mw.id_allocine
 GROUP BY mw.id_allocine;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `w1_halls` AS
-  SELECT mw.id_allocine, GROUP_CONCAT(mwh.hall_name SEPARATOR ',') halls
+  SELECT mw.id_allocine, GROUP_CONCAT(mwh.hall_name SEPARATOR ', ') halls
     FROM movies_w1 mw
     LEFT OUTER JOIN movie_w0_hall mwh ON mwh.id_allocine = mw.id_allocine
 GROUP BY mw.id_allocine;
@@ -183,7 +183,8 @@ GROUP BY mw.id_allocine;
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `w0_movies` AS
   SELECT mw.id_allocine, mw.pred_entries, mw.title, mw.img_src, wd.directors,
-         wa.actors, wg.genres, wh.halls
+         wa.actors, wg.genres, wh.halls, mw.release_date, mw.synopsis,
+         mw.societies, mw.nationality
     FROM movies_w0 mw
     LEFT OUTER JOIN w0_directors wd ON wd.id_allocine = mw.id_allocine
     LEFT OUTER JOIN w0_actors wa ON wa.id_allocine = mw.id_allocine
