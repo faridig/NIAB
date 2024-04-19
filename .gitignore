@@ -1,17 +1,8 @@
-DigiCertGlobalRootCA.crt.pem
-niab_django/DigiCertGlobalRootCA.crt.pem
-
 EDA/EDA.csv
-
 EDA.csv
 
 chris/
 chris.ipynb
-
-# Created by https://www.toptal.com/developers/gitignore/api/python,linux,django
-# Edit at https://www.toptal.com/developers/gitignore?templates=python,linux,django
-# Created by https://www.toptal.com/developers/gitignore/api/linux,python,django
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,python,django
 
 ### Django ###
 *.log
