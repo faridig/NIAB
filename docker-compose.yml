@@ -1,0 +1,23 @@
+version: '3'
+services:
+  api:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/api
+    env_file:
+      - api/.env
+
+  niab_django:
+    build: 
+      context: ./niab_django
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./niab_django:/app
+    env_file:
+      - niab_django/.env
