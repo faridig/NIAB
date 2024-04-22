@@ -110,7 +110,8 @@ def previsionnel(request):
     conn = functional_conn()
     cur = conn.cursor()
     
-    niab_request = f'''SELECT mw.title,
+    niab_request = f'''SELECT mw.id_allocine,
+                              mw.title,
                               CASE
                                 WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
                                 ELSE ROUND(mw.pred_entries / {volume})
@@ -171,7 +172,8 @@ def resultat(request):
     conn = functional_conn()
     cur = conn.cursor()
     
-    niab_request = f'''SELECT h.hall_name,
+    niab_request = f'''SELECT mw.id_allocine,
+                              h.hall_name,
                               mw.title,
                               CASE
                                 WHEN ROUND(mw.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
