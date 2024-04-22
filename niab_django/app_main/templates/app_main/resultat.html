@@ -7,58 +7,121 @@
 <h1 class="text-3xl text-gray-500 py-4">Résultats réels</h1>
 
 <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
-    <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 p-4 shadow-md rounded-lg">
-        <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="0">
-            <thead>
-                <tr>
-                    <td class="border font-bold">Salle</td>
-                    <td class="border font-bold">film</td>
-                    <td class="border font-bold">pl. pred / s.</td>
-                    <td class="border font-bold">pl. réel / s.</td>
-                    <td class="border font-bold">C.A. pred s.</td>
-                    <td class="border font-bold">C.A. réel s.</td>
-                </tr>
-            </thead>
-            <tbody>
-            {% for true_movie in true_movies %}
-              <tr>
-                <td class="border">{{ true_movie.0 }}</td>
-                <td class="border">{{ true_movie.1 }}</td>
-                <td class="border">{{ true_movie.2 }}</td>
-                <td class="border">{{ true_movie.3 }}</td>
-                <td class="border">{{ true_movie.4 }}€</td>
-                <td class="border">{{ true_movie.5 }}€</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="border font-bold">Sous-total</td>
-                <td class="border font-bold">{{ ca.0.0 }}€</td>
-                <td class="border font-bold">{{ ca.0.1 }}€</td>
-              </tr>   
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="border font-bold">Gestion</td>
-                <td class="border font-bold">{{ fixed_costs }}.00€</td>
-                <td class="border font-bold">{{ fixed_costs }}.00€</td>
-              </tr>   
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="border font-bold text-red-500">Total</td>
-                <td class="border font-bold text-red-500">{{ fin_result.0.0 }}€</td>
-                <td class="border font-bold text-red-500">{{ fin_result.0.1 }}€</td>
-              </tr>   
-            </tfoot>
-          </table>
-    </div>
+  <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 p-4 shadow-md rounded-lg block md:hidden">
+    Liste des salles :
+    {% for true_movie in true_movies %}
+      <p>→ {{ true_movie.0 }}</p>
+    {% endfor %}
+  </div>
+  <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 p-4 shadow-md rounded-lg block md:hidden">
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="0">
+      <thead>
+        <tr>
+          <td class="border font-bold">film</td>
+          <td class="border font-bold">C.A. pred s.</td>
+          <td class="border font-bold">C.A. réel s.</td>
+        </tr>
+      </thead>
+      <tbody>
+      {% for true_movie in true_movies %}
+        <tr>
+          <td class="border">{{ true_movie.1 }}</td>
+          <td class="border">{{ true_movie.4 }}€</td>
+          <td class="border">{{ true_movie.5 }}€</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td class="border font-bold">Sous-total</td>
+          <td class="border font-bold">{{ ca.0.0 }}€</td>
+          <td class="border font-bold">{{ ca.0.1 }}€</td>
+        </tr>   
+        <tr>
+          <td class="border font-bold">Gestion</td>
+          <td class="border font-bold">{{ fixed_costs }}.00€</td>
+          <td class="border font-bold">{{ fixed_costs }}.00€</td>
+        </tr>   
+        <tr>
+          <td class="border font-bold text-red-500">Total</td>
+          <td class="border font-bold text-red-500">{{ fin_result.0.0 }}€</td>
+          <td class="border font-bold text-red-500">{{ fin_result.0.1 }}€</td>
+        </tr>   
+      </tfoot>
+    </table>
+  </div>
+  <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 p-4 shadow-md rounded-lg block md:hidden">
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="0">
+      <thead>
+        <tr>
+          <td class="border font-bold">film</td>
+          <td class="border font-bold">pl. pred / s.</td>
+          <td class="border font-bold">pl. réel / s.</td>
+        </tr>
+      </thead>
+      <tbody>
+      {% for true_movie in true_movies %}
+        <tr>
+          <td class="border">{{ true_movie.1 }}</td>
+          <td class="border">{{ true_movie.2 }}</td>
+          <td class="border">{{ true_movie.3 }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 p-4 shadow-md rounded-lg hidden md:block">
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="0">
+      <thead>
+        <tr>
+          <td class="border font-bold">Salle</td>
+          <td class="border font-bold">film</td>
+          <td class="border font-bold">pl. pred / s.</td>
+          <td class="border font-bold">pl. réel / s.</td>
+          <td class="border font-bold">C.A. pred s.</td>
+          <td class="border font-bold">C.A. réel s.</td>
+        </tr>
+      </thead>
+      <tbody>
+      {% for true_movie in true_movies %}
+        <tr>
+          <td class="border">{{ true_movie.0 }}</td>
+          <td class="border">{{ true_movie.1 }}</td>
+          <td class="border">{{ true_movie.2 }}</td>
+          <td class="border">{{ true_movie.3 }}</td>
+          <td class="border">{{ true_movie.4 }}€</td>
+          <td class="border">{{ true_movie.5 }}€</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="border font-bold">Sous-total</td>
+          <td class="border font-bold">{{ ca.0.0 }}€</td>
+          <td class="border font-bold">{{ ca.0.1 }}€</td>
+        </tr>   
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="border font-bold">Gestion</td>
+          <td class="border font-bold">{{ fixed_costs }}.00€</td>
+          <td class="border font-bold">{{ fixed_costs }}.00€</td>
+        </tr>   
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="border font-bold text-red-500">Total</td>
+          <td class="border font-bold text-red-500">{{ fin_result.0.0 }}€</td>
+          <td class="border font-bold text-red-500">{{ fin_result.0.1 }}€</td>
+        </tr>   
+      </tfoot>
+    </table>
+  </div>
 </div>
 
 {% endblock content %}
