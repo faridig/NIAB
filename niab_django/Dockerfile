@@ -2,7 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y netcat-openbsd
+RUN apt-get update && apt-get install -y netcat-openbsd 
+
+
 
 # ENV PYTHONUNBUFFERED 1
 
@@ -11,7 +13,8 @@ COPY requirements.txt /app
 RUN apt-get update && apt-get install -y \
     pkg-config \
     libmariadb-dev-compat \
-    gcc
+    gcc 
+    
 
 # Then, you can install the Python dependencies
 RUN pip install --upgrade pip &&\
