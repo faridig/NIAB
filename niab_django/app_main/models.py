@@ -92,6 +92,8 @@ class MoviesHistory(models.Model):
     pred_entries   = models.IntegerField(null=True, blank=True)
     true_entries   = models.IntegerField(null=True, blank=True)
     history_date   = models.DateField(max_length=10, null=True, blank=True)
+    fixed_costs    = models.IntegerField(null=True, blank=True)
+    volume         = models.IntegerField(null=True, blank=True)
 
     class Meta:
         db_table = 'movies_history'
