@@ -22,10 +22,10 @@ logging.basicConfig(filename=logfile, level=logging.INFO, format='%(asctime)s - 
 logging.info("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
 
 
-def settings():
+def settings(key):
     settings = niab_settings()
     settings_data = []
-    settings_data.append(settings['fixed_costs'])
+    settings_data.append(settings[key])
 
     return settings_data
 
@@ -99,9 +99,125 @@ def film(request):
 
 
 @login_required
+def previsionnel(request):
+    logging.info('--------------------')
+    logging.info('def film')
+    logging.info('--------------------')
+
+    fixed_costs = settings('fixed_costs')[0]
+    volume = settings('volume')[0]
+
+    conn = functional_conn()
+    cur = conn.cursor()
+    
+    niab_request = f'''SELECT wm.title,
+                              CASE
+                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / {volume})
+                              END AS pred_entries_week,
+                              ROUND (CASE
+                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / {volume})
+                              end / 7) AS pred_entries_day,
+                              CASE
+                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / {volume})
+                              END * h.ticket_price AS ca,
+                              h.*
+                         FROM w0_movies wm
+                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
+                         JOIN halls h on h.hall_name = wh.halls
+                     ORDER BY h.number_of_seats DESC'''
+    pred_movies = mysql_request(cur, niab_request, logging, "SELECT ALL pred_movies")
+    
+    niab_request = f'''SELECT SUM(CASE
+                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / {volume})
+                              END * h.ticket_price) AS ca
+                         FROM w0_movies wm
+                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
+                         JOIN halls h on h.hall_name = wh.halls'''
+    ca = mysql_request(cur, niab_request, logging, "SELECT ONE ca")
+    
+    niab_request = f'''SELECT SUM(CASE
+                                WHEN round(wm.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / 2000)
+                              END * h.ticket_price) - {fixed_costs} AS fin_result
+                         FROM w0_movies wm
+                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
+                         JOIN halls h on h.hall_name = wh.halls'''
+    fin_result = mysql_request(cur, niab_request, logging, "SELECT ONE fin_result")
+
+    conn.commit()
+    conn.close()
+
+    return render(request, 'app_main/previsionnel.html', {
+                                                        'pred_movies': pred_movies,
+                                                        'ca': ca,
+                                                        'fixed_costs': fixed_costs,
+                                                        'fin_result': fin_result,
+                                                     })
+
+
+@login_required
 def resultat(request):
-    settings_data = settings()
-    return render(request, 'app_main/resultat.html')
+    logging.info('--------------------')
+    logging.info('def film')
+    logging.info('--------------------')
+
+    fixed_costs = settings('fixed_costs')[0]
+    volume = settings('volume')[0]
+
+    conn = functional_conn()
+    cur = conn.cursor()
+    
+    niab_request = f'''SELECT wm.title,
+                              CASE
+                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / {volume})
+                              END AS pred_entries_week,
+                              ROUND (CASE
+                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / {volume})
+                              end / 7) AS pred_entries_day,
+                              CASE
+                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / {volume})
+                              END * h.ticket_price AS ca,
+                              h.*
+                         FROM w0_movies wm
+                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
+                         JOIN halls h on h.hall_name = wh.halls
+                     ORDER BY h.number_of_seats DESC'''
+    pred_movies = mysql_request(cur, niab_request, logging, "SELECT ALL pred_movies")
+    
+    niab_request = f'''SELECT SUM(CASE
+                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / {volume})
+                              END * h.ticket_price) AS ca
+                         FROM w0_movies wm
+                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
+                         JOIN halls h on h.hall_name = wh.halls'''
+    ca = mysql_request(cur, niab_request, logging, "SELECT ONE ca")
+    
+    niab_request = f'''SELECT SUM(CASE
+                                WHEN round(wm.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE round(wm.pred_entries / 2000)
+                              END * h.ticket_price) - {fixed_costs} AS fin_result
+                         FROM w0_movies wm
+                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
+                         JOIN halls h on h.hall_name = wh.halls'''
+    fin_result = mysql_request(cur, niab_request, logging, "SELECT ONE fin_result")
+
+    conn.commit()
+    conn.close()
+
+    return render(request, 'app_main/resultat.html', {
+                                                        'pred_movies': pred_movies,
+                                                        'ca': ca,
+                                                        'fixed_costs': fixed_costs,
+                                                        'fin_result': fin_result,
+                                                     })
 
 @login_required
 def historique(request):
