@@ -13,21 +13,21 @@
                 <tr>
                     <td class="border font-bold">Salle</td>
                     <td class="border font-bold">film</td>
-                    <td class="border font-bold">pl. / s.</td>
-                    <td class="border font-bold">pl. / j.</td>
-                    <td class="border font-bold">prix pl.</td>
-                    <td class="border font-bold">C.A. s.</td>
+                    <td class="border font-bold">pl. pred / s.</td>
+                    <td class="border font-bold">pl. réel / s.</td>
+                    <td class="border font-bold">C.A. pred s.</td>
+                    <td class="border font-bold">C.A. réel s.</td>
                 </tr>
             </thead>
             <tbody>
-            {% for pred_movie in pred_movies %}
+            {% for true_movie in true_movies %}
               <tr>
-                <td class="border">{{ pred_movie.4 }}</td>
-                <td class="border">{{ pred_movie.0 }}</td>
-                <td class="border">{{ pred_movie.1 }}</td>
-                <td class="border">{{ pred_movie.2 }}</td>
-                <td class="border">{{ pred_movie.6 }}€</td>
-                <td class="border">{{ pred_movie.3 }}€</td>
+                <td class="border">{{ true_movie.0 }}</td>
+                <td class="border">{{ true_movie.1 }}</td>
+                <td class="border">{{ true_movie.2 }}</td>
+                <td class="border">{{ true_movie.3 }}</td>
+                <td class="border">{{ true_movie.4 }}€</td>
+                <td class="border">{{ true_movie.5 }}€</td>
               </tr>
             {% endfor %}
             </tbody>
@@ -36,25 +36,25 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
                 <td class="border font-bold">Sous-total</td>
                 <td class="border font-bold">{{ ca.0.0 }}€</td>
+                <td class="border font-bold">{{ ca.0.1 }}€</td>
               </tr>   
               <tr>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
                 <td class="border font-bold">Gestion</td>
+                <td class="border font-bold">{{ fixed_costs }}.00€</td>
                 <td class="border font-bold">{{ fixed_costs }}.00€</td>
               </tr>   
               <tr>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td class="border font-bold">Total</td>
-                <td class="border font-bold">{{ fin_result.0.0 }}€</td>
+                <td class="border font-bold text-red-500">Total</td>
+                <td class="border font-bold text-red-500">{{ fin_result.0.0 }}€</td>
+                <td class="border font-bold text-red-500">{{ fin_result.0.1 }}€</td>
               </tr>   
             </tfoot>
           </table>

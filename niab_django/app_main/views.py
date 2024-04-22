@@ -110,42 +110,42 @@ def previsionnel(request):
     conn = functional_conn()
     cur = conn.cursor()
     
-    niab_request = f'''SELECT wm.title,
+    niab_request = f'''SELECT mw.title,
                               CASE
-                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / {volume})
+                                WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / {volume})
                               END AS pred_entries_week,
                               ROUND (CASE
-                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / {volume})
+                                WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / {volume})
                               end / 7) AS pred_entries_day,
                               CASE
-                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / {volume})
+                                WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / {volume})
                               END * h.ticket_price AS ca,
                               h.*
-                         FROM w0_movies wm
-                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
-                         JOIN halls h on h.hall_name = wh.halls
+                         FROM movies_w0 mw
+                         JOIN movie_w0_hall mwh on mwh.id_allocine = mw.id_allocine
+                         JOIN halls h on h.hall_name = mwh.hall_name
                      ORDER BY h.number_of_seats DESC'''
     pred_movies = mysql_request(cur, niab_request, logging, "SELECT ALL pred_movies")
     
     niab_request = f'''SELECT SUM(CASE
-                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / {volume})
+                                WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / {volume})
                               END * h.ticket_price) AS ca
-                         FROM w0_movies wm
-                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
-                         JOIN halls h on h.hall_name = wh.halls'''
+                         FROM movies_w0 mw
+                         JOIN movie_w0_hall mwh on mwh.id_allocine = mw.id_allocine
+                         JOIN halls h on h.hall_name = mwh.hall_name'''
     ca = mysql_request(cur, niab_request, logging, "SELECT ONE ca")
     
     niab_request = f'''SELECT SUM(CASE
-                                WHEN round(wm.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / 2000)
+                                WHEN ROUND(mw.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / 2000)
                               END * h.ticket_price) - {fixed_costs} AS fin_result
-                         FROM w0_movies wm
-                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
-                         JOIN halls h on h.hall_name = wh.halls'''
+                         FROM movies_w0 mw
+                         JOIN movie_w0_hall mwh on mwh.id_allocine = mw.id_allocine
+                         JOIN halls h on h.hall_name = mwh.hall_name'''
     fin_result = mysql_request(cur, niab_request, logging, "SELECT ONE fin_result")
 
     conn.commit()
@@ -171,51 +171,63 @@ def resultat(request):
     conn = functional_conn()
     cur = conn.cursor()
     
-    niab_request = f'''SELECT wm.title,
+    niab_request = f'''SELECT h.hall_name,
+                              mw.title,
                               CASE
-                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / {volume})
+                                WHEN ROUND(mw.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / 2000)
                               END AS pred_entries_week,
-                              ROUND (CASE
-                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / {volume})
-                              end / 7) AS pred_entries_day,
                               CASE
-                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / {volume})
-                              END * h.ticket_price AS ca,
-                              h.*
-                         FROM w0_movies wm
-                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
-                         JOIN halls h on h.hall_name = wh.halls
+                                WHEN ROUND(mw.true_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.true_entries / 2000)
+                              END AS true_entries_week,
+                              CASE
+                                WHEN ROUND(mw.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / 2000)
+                              END * h.ticket_price AS pred_ca,
+                              CASE
+                                WHEN ROUND(mw.true_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.true_entries / 2000)
+                              END * h.ticket_price AS true_ca
+                         FROM movies_w1 mw
+                         JOIN movie_w1_hall mwh on mwh.id_allocine = mw.id_allocine
+                         JOIN halls h on h.hall_name = mwh.hall_name
                      ORDER BY h.number_of_seats DESC'''
-    pred_movies = mysql_request(cur, niab_request, logging, "SELECT ALL pred_movies")
-    
+    true_movies = mysql_request(cur, niab_request, logging, "SELECT ALL true_movies")
+
     niab_request = f'''SELECT SUM(CASE
-                                WHEN round(wm.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / {volume})
-                              END * h.ticket_price) AS ca
-                         FROM w0_movies wm
-                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
-                         JOIN halls h on h.hall_name = wh.halls'''
+                                WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / {volume})
+                              END * h.ticket_price) AS pred_ca,
+                              SUM(CASE
+                                WHEN ROUND(mw.true_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.true_entries / {volume})
+                              END * h.ticket_price) AS true_ca
+                         FROM movies_w1 mw
+                         JOIN movie_w1_hall mwh on mwh.id_allocine = mw.id_allocine
+                         JOIN halls h on h.hall_name = mwh.hall_name'''
     ca = mysql_request(cur, niab_request, logging, "SELECT ONE ca")
     
     niab_request = f'''SELECT SUM(CASE
-                                WHEN round(wm.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE round(wm.pred_entries / 2000)
-                              END * h.ticket_price) - {fixed_costs} AS fin_result
-                         FROM w0_movies wm
-                         JOIN w0_halls wh on wh.id_allocine = wm.id_allocine
-                         JOIN halls h on h.hall_name = wh.halls'''
+                                WHEN ROUND(mw.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / 2000)
+                              END * h.ticket_price) - {fixed_costs} AS pred_result,
+                              SUM(CASE
+                                WHEN ROUND(mw.true_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.true_entries / 2000)
+                              END * h.ticket_price) - {fixed_costs} AS true_result
+                         FROM movies_w1 mw
+                         JOIN movie_w1_hall mwh on mwh.id_allocine = mw.id_allocine
+                         JOIN halls h on h.hall_name = mwh.hall_name'''
     fin_result = mysql_request(cur, niab_request, logging, "SELECT ONE fin_result")
 
     conn.commit()
     conn.close()
 
     return render(request, 'app_main/resultat.html', {
-                                                        'pred_movies': pred_movies,
-                                                        'ca': ca,
+                                                        'true_movies': true_movies,
                                                         'fixed_costs': fixed_costs,
+                                                        'ca': ca,
                                                         'fin_result': fin_result,
                                                      })
 
