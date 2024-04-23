@@ -141,8 +141,8 @@ def previsionnel(request):
     ca = mysql_request(cur, niab_request, logging, "SELECT ONE ca")
     
     niab_request = f'''SELECT SUM(CASE
-                                WHEN ROUND(mw.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE ROUND(mw.pred_entries / 2000)
+                                WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / {volume})
                               END * h.ticket_price) - {fixed_costs} AS fin_result
                          FROM movies_w0 mw
                          JOIN movie_w0_hall mwh on mwh.id_allocine = mw.id_allocine
@@ -176,20 +176,20 @@ def resultat(request):
                               h.hall_name,
                               mw.title,
                               CASE
-                                WHEN ROUND(mw.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE ROUND(mw.pred_entries / 2000)
+                                WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / {volume})
                               END AS pred_entries_week,
                               CASE
-                                WHEN ROUND(mw.true_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE ROUND(mw.true_entries / 2000)
+                                WHEN ROUND(mw.true_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.true_entries / {volume})
                               END AS true_entries_week,
                               CASE
-                                WHEN ROUND(mw.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE ROUND(mw.pred_entries / 2000)
+                                WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / {volume})
                               END * h.ticket_price AS pred_ca,
                               CASE
-                                WHEN ROUND(mw.true_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE ROUND(mw.true_entries / 2000)
+                                WHEN ROUND(mw.true_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.true_entries / {volume})
                               END * h.ticket_price AS true_ca
                          FROM movies_w1 mw
                          JOIN movie_w1_hall mwh on mwh.id_allocine = mw.id_allocine
@@ -211,12 +211,12 @@ def resultat(request):
     ca = mysql_request(cur, niab_request, logging, "SELECT ONE ca")
     
     niab_request = f'''SELECT SUM(CASE
-                                WHEN ROUND(mw.pred_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE ROUND(mw.pred_entries / 2000)
+                                WHEN ROUND(mw.pred_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.pred_entries / {volume})
                               END * h.ticket_price) - {fixed_costs} AS pred_result,
                               SUM(CASE
-                                WHEN ROUND(mw.true_entries / 2000) > h.number_of_seats * 7 THEN h.number_of_seats * 7
-                                ELSE ROUND(mw.true_entries / 2000)
+                                WHEN ROUND(mw.true_entries / {volume}) > h.number_of_seats * 7 THEN h.number_of_seats * 7
+                                ELSE ROUND(mw.true_entries / {volume})
                               END * h.ticket_price) - {fixed_costs} AS true_result
                          FROM movies_w1 mw
                          JOIN movie_w1_hall mwh on mwh.id_allocine = mw.id_allocine
@@ -235,4 +235,96 @@ def resultat(request):
 
 @login_required
 def historique(request):
-    return render(request, 'app_main/historique.html')
+    logging.info('--------------------')
+    logging.info('def historique')
+    logging.info('--------------------')
+
+    fixed_costs = settings('fixed_costs')[0]
+    volume = settings('volume')[0]
+
+    conn = functional_conn()
+    cur = conn.cursor()
+    
+    niab_request = f'''  SELECT mh.history_date,
+                                GROUP_CONCAT(mh.title SEPARATOR ' / ') titles,
+                                AVG(mh.fixed_costs) fixed_costs,
+                                AVG(mh.volume) volume,
+                                SUM(mh.pred_entries) pred_entries,
+                                SUM(mh.true_entries) true_entries,
+                                SUM(CASE
+                                        WHEN ROUND(mh.pred_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.pred_entries / {volume})
+                                    END) AS pred_entries_week,
+                                SUM(CASE
+                                        WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.true_entries / {volume})
+                                    END) AS true_entries_week,
+                                SUM(CASE
+                                        WHEN ROUND(mh.pred_entries / {volume}) > h.number_of_seats * 7
+                                            THEN ROUND(mh.pred_entries / {volume})
+                                        ELSE 0
+                                    END) AS max_pred_entries_week,
+                                SUM(CASE
+                                        WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
+                                            THEN ROUND(mh.true_entries / {volume})
+                                        ELSE 0
+                                    END) AS max_true_entries_week,
+                                SUM(CASE
+                                        WHEN ROUND(mh.pred_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.pred_entries / {volume})
+                                    END * mhh.ticket_price) AS pred_result,
+                                SUM(CASE
+                                        WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.true_entries / {volume})
+                                    END * mhh.ticket_price) AS true_result,
+                                GROUP_CONCAT(h.hall_name SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(mh.title SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(mh.pred_entries SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(mh.true_entries SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.pred_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.pred_entries / {volume})
+                                    END SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.true_entries / {volume})
+                                    END SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.pred_entries / {volume}) > h.number_of_seats * 7
+                                            THEN ROUND(mh.pred_entries / {volume})
+                                        ELSE 0
+                                    END SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
+                                            THEN ROUND(mh.true_entries / {volume})
+                                        ELSE 0
+                                    END SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.pred_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.pred_entries / {volume})
+                                    END * mhh.ticket_price SEPARATOR '€<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.true_entries / {volume})
+                                    END * mhh.ticket_price SEPARATOR '€<br>') infos_hall
+                           FROM movies_history mh
+                           JOIN movie_history_hall mhh ON mhh.id_allocine = mh.id_allocine
+                           JOIN halls h ON h.hall_name = mhh.hall_name
+                       GROUP BY mh.history_date
+                       ORDER BY mh.history_date DESC'''
+    histories = mysql_request(cur, niab_request, logging, "SELECT ALL histories")
+
+    conn.commit()
+    conn.close()
+
+    return render(request, 'app_main/historique.html', {
+                                                        'histories': histories,
+                                                     })

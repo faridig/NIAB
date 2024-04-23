@@ -1,9 +1,11 @@
 CREATE DEFINER=`niabadmin`@`%` TRIGGER `movie_w0_hall_bi` BEFORE INSERT ON `movie_w0_hall` FOR EACH ROW BEGIN
-    SET NEW.ticket_price = SELECT ticket_price FROM halls WHERE hall_name = NEW.hall_name;
+    SET NEW.ticket_price = (SELECT ticket_price FROM halls WHERE hall_name = NEW.hall_name);
 END
 
 CREATE DEFINER=`niabadmin`@`%` TRIGGER `movies_history_bi` BEFORE INSERT ON `movies_history` FOR EACH ROW BEGIN
     SET NEW.history_date = CURDATE();
+    SET NEW.fixed_costs = (SELECT CAST(value AS UNSIGNED) FROM settings WHERE `key` = 'fixed_costs');
+    SET NEW.volume = (SELECT CAST(value AS UNSIGNED) FROM settings WHERE `key` = 'volume');
 END
 
 CREATE DEFINER=`niabadmin`@`%` TRIGGER `movies_w0_bi` BEFORE INSERT ON `movies_w0` FOR EACH ROW BEGIN
