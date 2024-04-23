@@ -17,3 +17,8 @@ function toggleDarkMode() {
         }
     }
 })();
+
+function tr_display(idDiv) {
+    const targetRow = document.getElementById(idDiv);
+    targetRow.classList.toggle('hidden');
+}

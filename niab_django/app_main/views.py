@@ -280,7 +280,41 @@ def historique(request):
                                         WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
                                             THEN h.number_of_seats * 7
                                         ELSE ROUND(mh.true_entries / {volume})
-                                    END * mhh.ticket_price) AS true_result
+                                    END * mhh.ticket_price) AS true_result,
+                                GROUP_CONCAT(h.hall_name SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(mh.title SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(mh.pred_entries SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(mh.true_entries SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.pred_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.pred_entries / {volume})
+                                    END SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.true_entries / {volume})
+                                    END SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.pred_entries / {volume}) > h.number_of_seats * 7
+                                            THEN ROUND(mh.pred_entries / {volume})
+                                        ELSE 0
+                                    END SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
+                                            THEN ROUND(mh.true_entries / {volume})
+                                        ELSE 0
+                                    END SEPARATOR '<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.pred_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.pred_entries / {volume})
+                                    END * mhh.ticket_price SEPARATOR '€<br>') infos_hall,
+                                GROUP_CONCAT(CASE
+                                        WHEN ROUND(mh.true_entries / {volume}) > h.number_of_seats * 7
+                                            THEN h.number_of_seats * 7
+                                        ELSE ROUND(mh.true_entries / {volume})
+                                    END * mhh.ticket_price SEPARATOR '€<br>') infos_hall
                            FROM movies_history mh
                            JOIN movie_history_hall mhh ON mhh.id_allocine = mh.id_allocine
                            JOIN halls h ON h.hall_name = mhh.hall_name
