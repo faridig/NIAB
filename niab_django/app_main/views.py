@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 import logging
 import pathlib
 import os
-import json
 
 from .utils import niab_settings, functional_conn, mysql_request
 from .models import Movies, Halls
