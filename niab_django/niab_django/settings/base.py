@@ -91,11 +91,11 @@ DATABASES = {
         'PASSWORD': DB_FUNCTIONAL_PASSWORD,
         'HOST': DB_FUNCTIONAL_HOST,
         'PORT': '3306', # port par défaut de MySQL
-        'OPTIONS': {
-            'ssl': {
-                'ca': DB_FUNCTIONAL_SSL,  # Chemin vers le fichier du certificat CA
-            }
-        }
+        # 'OPTIONS': {
+        #     'ssl': {
+        #         'ca': DB_FUNCTIONAL_SSL,  # Chemin vers le fichier du certificat CA
+        #     }
+        # }
     }
 }
 
