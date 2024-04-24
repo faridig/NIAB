@@ -14,13 +14,17 @@
                 <th class="border font-bold" nowrap>Date</th>
                 <th class="border font-bold" nowrap>Pred s.</th>
                 <th class="border font-bold" nowrap>Réel s.</th>
-                <th class="border font-bold text-red-500" nowrap>Pred résu.</th>
-                <th class="border font-bold text-red-500" nowrap>Réel résu.</th>
+                <th id="title1" class="border font-bold text-red-500" nowrap>Pred résu.</th>
+                <th id="title2" class="border font-bold text-red-500" nowrap>Réel résu.</th>
                 </tr>
             </thead>
             <tbody>
             {% for history in histories %}
-                <tr onClick="tr_display('smartphone1-{{ forloop.counter }}');
+                <tr onClick="tr_display('title1');
+                             tr_display('title2');
+                             tr_display('total1-{{ forloop.counter }}');
+                             tr_display('total2-{{ forloop.counter }}');
+                             tr_display('smartphone1-{{ forloop.counter }}');
                              tr_display('smartphone2-{{ forloop.counter }}');
                              tr_display('smartphone3-{{ forloop.counter }}');
                              tr_display('smartphone4-{{ forloop.counter }}');
@@ -30,8 +34,8 @@
                     <td class="border">{{ history.0 }}</td>
                     <td class="border">{{ history.6 }}</td>
                     <td class="border">{{ history.7 }}</td>
-                    <td class="border font-bold text-red-500">{{ history.10 }}€</td>
-                    <td class="border font-bold text-red-500">{{ history.11 }}€</td>
+                    <td id="total1-{{ forloop.counter }}" class="border font-bold text-red-500">{{ history.10 | floatformat:"0" }}€</td>
+                    <td id="total2-{{ forloop.counter }}" class="border font-bold text-red-500">{{ history.11 | floatformat:"0" }}€</td>
                 </tr>
                 <tr id="smartphone1-{{ forloop.counter }}" class="hidden">
                     <td>{{ history.12 | safe}}</td>
@@ -40,34 +44,44 @@
                 <tr id="smartphone2-{{ forloop.counter }}" class="hidden">
                     <td class="border">Coûts fixes</td>
                     <td class="border">Volume calc.</td>
-                    <td class="border">Pred e. Fr</td>
-                    <td class="border">Réel e. Fr</td>
+                    <td class="border hidden">Pred e. Fr</td>
+                    <td id="title2-{{ forloop.counter }}"  class="border">Réel e. Fr</td>
+                    <td></td>
                 </tr>
                 <tr id="smartphone3-{{ forloop.counter }}" class="hidden">
-                    <td>{{ history.2 | safe}}€</td>
-                    <td>{{ history.3 | safe}}</td>
+                    <td>{{ history.2 | floatformat:"0" | safe}}€</td>
+                    <td>{{ history.3 | floatformat:"0" | safe}}</td>
                     <td>{{ history.14 | safe}}</td>
                     <td>{{ history.15 | safe}}</td>
+                    <td></td>
                 </tr>
                 <tr id="smartphone4-{{ forloop.counter }}" class="hidden">
                     <td class="border">Pred s.</td>
                     <td class="border">Réel s.</td>
                     <td class="border">Pred s. MAX</td>
-                    <td class="border">Réel s. MAX</td>Pred résultats 	Réel résultats
+                    <td class="border">Réel s. MAX</td>
+                    <td></td>
                 </tr>
                 <tr id="smartphone5-{{ forloop.counter }}" class="hidden">
                     <td>{{ history.16 | safe}}</td>
                     <td>{{ history.17 | safe}}</td>
                     <td>{{ history.18 | safe}}</td>
                     <td>{{ history.19 | safe}}</td>
+                    <td></td>
                 </tr>
                 <tr id="smartphone6-{{ forloop.counter }}" class="hidden">
                     <td class="border text-red-500">Pred résultats</td>
                     <td class="border text-red-500">Réel résultats</td>
+                    <td class="border text-red-500 font-bold">Pred total</td>
+                    <td class="border text-red-500 font-bold">Réel total</td>
+                    <td></td>
                 </tr>
                 <tr id="smartphone7-{{ forloop.counter }}" class="hidden">
-                    <td>{{ history.20 | safe}}€<br><br><br></td>
-                    <td>{{ history.21 | safe}}€<br><br><br></td>
+                    <td class="text-red-500 font-bold">{{ history.20 | safe}}€<br><br><br><br></td>
+                    <td class="text-red-500 font-bold">{{ history.21 | safe}}€<br><br><br><br></td>
+                    <td class="text-red-500 font-bold">{{ history.10 | floatformat:"0" }}€<br><br><br><br></td>
+                    <td class="text-red-500 font-bold">{{ history.11 | floatformat:"0" }}€<br><br><br><br></td>
+                    <td></td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -19,9 +19,6 @@ function toggleDarkMode() {
 })();
 
 function tr_display(idDiv) {
-    // document.getElementById(idDiv).style.display='block';
-    // document.getElementById(idDivLien).style.display='none';
-    // alert('coco');
     const targetRow = document.getElementById(idDiv);
     targetRow.classList.toggle('hidden');
 }
