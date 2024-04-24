@@ -10,7 +10,7 @@ def functional_conn():
                 user = dot_env.FUNCTIONAL_USER,
                 password = dot_env.FUNCTIONAL_PASSWORD,
                 database = dot_env.FUNCTIONAL_DATABASE,
-                ssl_ca=dot_env.FUNCTIONAL_SSL
+                # ssl_ca=dot_env.FUNCTIONAL_SSL
             )
 
 # Request and logging

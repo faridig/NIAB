@@ -4,17 +4,14 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y netcat-openbsd 
 
-
-
-# ENV PYTHONUNBUFFERED 1
-
 COPY requirements.txt /app
 
 RUN apt-get update && apt-get install -y \
     pkg-config \
     libmariadb-dev-compat \
     gcc 
-    
+
+ENV PYTHONUNBUFFERED=1
 
 # Then, you can install the Python dependencies
 RUN pip install --upgrade pip &&\

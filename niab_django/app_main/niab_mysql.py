@@ -10,7 +10,8 @@ def analytic_conn():
                 user = dot_env.ANALYTIC_USER,
                 password = dot_env.ANALYTIC_PASSWORD,
                 database = dot_env.ANALYTIC_DATABASE,
-                ssl_ca=dot_env.ANALYTIC_SSL
+                port = dot_env.ANALYTIC_PORT
+                # ssl_ca=dot_env.ANALYTIC_SSL
             )
 
 # Request and logging

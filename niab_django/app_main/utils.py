@@ -19,7 +19,8 @@ def functional_conn():
             user = os.getenv('DB_FUNCTIONAL_USER'),
             password = os.getenv('DB_FUNCTIONAL_PASSWORD'),
             database = os.getenv('DB_FUNCTIONAL_DATABASE'),
-            ssl_ca=os.getenv('DB_FUNCTIONAL_SSL')
+            port = os.getenv('DB_FUNCTIONAL_PORT')
+            # ssl_ca=os.getenv('DB_FUNCTIONAL_SSL')
         )
 
 # Request and logging
