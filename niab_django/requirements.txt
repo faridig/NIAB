@@ -1,5 +1,7 @@
+bpython<2
 django<5
 django-dotenv<2
+loguru<2
 mysql<2
 mysqlclient<3
 mysql-connector-python<9
