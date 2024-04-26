@@ -1,0 +1,10 @@
+<a class="mx-2 hidden md:block" href="{% url "prediction" %}">Prédiction</a>
+        <a class="mx-2 hidden md:block" href="{% url "previsionnel" %}">Prévisionnels</a>
+        <a class="mx-2 hidden md:block" href="{% url "resultat" %}">Résultats</a>
+        <a class="mx-2 hidden md:block" href="{% url "historique" %}">Historique</a>
+
+        {% comment %} SMARTPHONE {% endcomment %}
+        <a class="mx-2 block md:hidden" href="{% url "prediction" %}">PRED</a>
+        <a class="mx-2 block md:hidden" href="{% url "previsionnel" %}">prev</a>
+        <a class="mx-2 block md:hidden" href="{% url "resultat" %}">resu</a>
+        <a class="mx-2 block md:hidden" href="{% url "historique" %}">histo</a>
