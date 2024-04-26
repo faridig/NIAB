@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}film{% endblock title %}
+
+{% block content %}
+
+{% for movie in movies %}
+    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-4">
+        <div>
+            <img src="{{ movie.3 }}"
+                alt="✘" class="mr-4 sm:rounded-tl-full sm:rounded-br-full">
+        </div>
+        
+        <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 p-4 shadow-md rounded-lg">
+            <h1 class="text-3xl text-gray-500 py-4">{{ movie.2 }}</h1>
+            <p><i>Prédiction : {{ movie.1 }}</i></p><br>
+            <p><strong>Réalisateurs :</strong> {{ movie.4 }}</p>
+            <p><strong>Acteurs :</strong> {{ movie.5 }}</p><br>
+            <p><strong>Date de sortie :</strong> {{ movie.8 }}</p>
+            <p><strong>Genres :</strong> {{ movie.6 }}</p>
+            <p><strong>Synopsis :</strong> {{ movie.9 }}</p><br>
+            <p><strong>Sociétés :</strong> {{ movie.10 }}</p>
+            <p><strong>Nationalité :</strong> {{ movie.11 }}</p>
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock content %}

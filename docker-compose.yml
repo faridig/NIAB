@@ -1,0 +1,52 @@
+# version: '3.8'
+# services:
+#   api:
+#     build: 
+#       context: ./api
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8000:8000"
+#     volumes:
+#       - ./api:/api
+#     env_file:
+#       - api/.env
+
+#   niab_django:
+#     build: 
+#       context: ./niab_django
+#       dockerfile: Dockerfile
+#     ports:
+#       - "80:80"
+#     volumes:
+#       - ./niab_django:/app
+#     env_file:
+#       - niab_django/.env
+
+version: '3.8'
+services:
+  api:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    image: farid59/niab_api
+    env_file:
+      - api/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/api
+    
+
+  niab_django:
+    build: 
+      context: ./niab_django
+      dockerfile: Dockerfile
+    image: farid59/niab_django
+    ports:
+      - "80:80"
+    volumes:
+      - ./niab_django:/app
+    env_file:
+      - niab_django/.env
+
+
