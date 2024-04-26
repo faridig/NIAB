@@ -55,6 +55,7 @@ def prediction_root(feature_input:FeaturesInput):
         # try:
         pred = prediction(model,[[F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19]])
         
+        cur.execute(f"UPDATE movies_w0 SET pred_entries = {pred} WHERE id_allocine = {F0};")
 
         # UPDATE movies_w0
         # SET prediction = pred
