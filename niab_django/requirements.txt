@@ -5,6 +5,7 @@ loguru<2
 mysql<2
 mysqlclient<3
 mysql-connector-python<9
-scrapy<3
 sqlparse<2
 whitenoise<7
+gunicorn
+

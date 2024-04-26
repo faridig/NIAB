@@ -1,10 +1,13 @@
+EDA/EDA.csv
 DigiCertGlobalRootCA.crt.pem
 niab_django/DigiCertGlobalRootCA.crt.pem
+
+EDA.csv
+
 chris/
 chris.ipynb
 
-# Created by https://www.toptal.com/developers/gitignore/api/linux,python,django
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,python,django
+deploy.yaml
 
 ### Django ###
 *.log
@@ -125,6 +128,8 @@ ipython_config.py
 #   in version control.
 #   https://pdm.fming.dev/#use-with-ide
 .pdm.toml
+
+DigiCertGlobalRootCA.crt.pem
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
@@ -283,4 +288,6 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-# End of https://www.toptal.com/developers/gitignore/api/linux,python,django
+# End of https://www.toptal.com/developers/gitignore/api/python,linux,django
+
+.csv

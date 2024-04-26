@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG') == '1'
+DEBUG =  os.environ.get('DEBUG') == '1'
 
 ALLOWED_HOSTS = ['*']
 
@@ -81,7 +81,8 @@ DB_FUNCTIONAL_HOST = os.getenv('DB_FUNCTIONAL_HOST')
 DB_FUNCTIONAL_USER = os.getenv('DB_FUNCTIONAL_USER')
 DB_FUNCTIONAL_PASSWORD = os.getenv('DB_FUNCTIONAL_PASSWORD')
 DB_FUNCTIONAL_DATABASE = os.getenv('DB_FUNCTIONAL_DATABASE')
-DB_FUNCTIONAL_SSL = os.getenv('DB_FUNCTIONAL_SSL')
+DB_FUNCTIONAL_PORT = os.getenv('AZURE_FUNCTIONAL_PORT')
+# DB_FUNCTIONAL_SSL = os.getenv('DB_FUNCTIONAL_SSL')
 
 DATABASES = {
     'default': {
@@ -90,12 +91,12 @@ DATABASES = {
         'USER': DB_FUNCTIONAL_USER,
         'PASSWORD': DB_FUNCTIONAL_PASSWORD,
         'HOST': DB_FUNCTIONAL_HOST,
-        'PORT': '3306', # port par défaut de MySQL
-        'OPTIONS': {
-            'ssl': {
-                'ca': DB_FUNCTIONAL_SSL,  # Chemin vers le fichier du certificat CA
-            }
-        }
+        'PORT': DB_FUNCTIONAL_PORT, # port par défaut de MySQL
+        # 'OPTIONS': {
+        #     'ssl': {
+        #         'ca': DB_FUNCTIONAL_SSL,  # Chemin vers le fichier du certificat CA
+        #     }
+        # }
     }
 }
 
